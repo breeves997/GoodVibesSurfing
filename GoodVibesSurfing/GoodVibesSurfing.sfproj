@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GetSnowConditions\GetSnowConditions.csproj" />
     <ProjectReference Include="..\GoodVibesWebService\GoodVibesWebService.xproj" />
+    <ProjectReference Include="..\ValetAccessManager\ValetAccessManager.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

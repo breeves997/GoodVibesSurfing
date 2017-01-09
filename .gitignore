@@ -1,3 +1,5 @@
+/packages/
+!packages/repositories.config
 *.swp
 *.swo
 ~
