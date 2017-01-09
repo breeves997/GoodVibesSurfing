@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/simple-sidebar.css">
+    <title>Service Fabric Samplers</title>
+
+</head>
+<body> 
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li>
+                    <a id="menu-toggle-2" href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-th-large fa-stack-1x"></i></span>Toggle</a>
+                </li>
+ 
+                <li class="active">
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span> Overview</a>
+                       <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="#">link1</a></li>
+                        <li><a href="#">link2</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa  fa-cloud-download fa-stack-1x "></i></span>Service health</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/health/failure.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Service failure</a></li>
+                        <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>link2</a></li>
+ 
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Meh</a>
+                </li>
+                <li>
+                    <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-database fa-stack-1x "></i></span>Data</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bolt fa-stack-1x "></i></span>Events</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wrench fa-stack-1x "></i></span>Service patterns</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bug fa-stack-1x "></i></span>Bugs and code</a>
+                </li>
+            </ul>
+        </div><!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <h3 style="display: none;" id="waitingForResponse">Currently awaiting response...</h3>
+                <h3 style="display: none;" id="responseFailed">We timed out!</h3>
+                <div class="row">
+                    <div class="well">
+                        <p>The buttons below manipulate and report on the state of the stateful SnowConditions service itself. By hitting "turn service off",
+                        we simulate a timeout in the service (executed by the SnowServiceController) for a random period of time between 3-15 seconds. The controller method 
+                        GET on the SnowConditionsController has a retry pattern injected into in, and so will attempt to retry the GET snowconditions call 
+                        several times before finally calling it quits (the operation will only retry on transient failures such as timeouts)</p>
+                        <br />
+                        <p>The retry pattern itself can be found in the $/CloudUtilities/FaultTolerance/BasicRetryPattern. The code should be straightforward, but it
+                        accepts a Func as an argument, and executes the delegate within a separate async task</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="snowpack">Current snowpack</label>
+                        <input type="text" id="snowpack" readonly/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="serviceHealth">Service Health</label>
+                        <input type="text" id="serviceHealth" readonly/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="btn btn-lg">
+                            <a id="getSnowPack" href="#">Try Get Snowpack</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="btn btn-lg">
+                            <a id="turnOffSnowService" href="#">Turn Service Off</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="btn btn-lg">
+                            <a id="getSnowServiceStatus" href="#">Get service status</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../vendor/sidebar-menu.js"></script>
+    <script src="../health/failure.js"></script>
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+</body>
+</html>

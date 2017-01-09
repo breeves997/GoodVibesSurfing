@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "exports": {
+    "CloudUtilities/1.0.0": {
+      "type": "project",
+      "framework": ".NETFramework,Version=v4.5.2",
+      "compile": {
+        "bin/Debug/CloudUtilities.dll": {}
+      },
+      "runtime": {
+        "bin/Debug/CloudUtilities.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/CloudUtilities.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    },
+    "GetSnowConditions.Interfaces/1.0.0": {
+      "type": "project",
+      "framework": ".NETFramework,Version=v4.5.2",
+      "compile": {
+        "bin/Debug/GetSnowConditions.Interfaces.dll": {}
+      },
+      "runtime": {
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/Microsoft.ServiceFabric.Internal.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/System.Fabric.Strings.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/System.Fabric.dll": {},
+        "../packages/Microsoft.ServiceFabric.Data.2.3.311/lib/net45/Microsoft.ServiceFabric.Data.Interfaces.dll": {},
+        "../packages/Microsoft.ServiceFabric.Data.2.3.311/lib/net45/Microsoft.ServiceFabric.Data.dll": {},
+        "../packages/Microsoft.ServiceFabric.Services.2.3.311/lib/net45/Microsoft.ServiceFabric.Services.dll": {},
+        "../packages/Microsoft.ServiceFabric.Services.2.3.311/lib/net45/ServiceFabricServiceModel.dll": {},
+        "bin/Debug/GetSnowConditions.Interfaces.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/GetSnowConditions.Interfaces.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    }
+  }
+}
