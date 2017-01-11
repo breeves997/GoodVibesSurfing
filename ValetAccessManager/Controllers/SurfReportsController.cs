@@ -8,17 +8,25 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net;
+using Microsoft.WindowsAzure.Storage.Shared.Protocol;
+using Microsoft.ServiceFabric.Services.Remoting;
+using Microsoft.ServiceFabric.Services.Runtime;
+using System.Fabric;
+using ValetAccessManager.Interfaces;
+using System.Threading.Tasks;
 
 namespace ValetAccessManager.Controllers
 {
-    public class SurfReportsController : ApiController
+    internal sealed class SurfReportsSASController : StatelessService, ISurfReportsSASController
     {
         private readonly CloudStorageAccount account;
         private readonly string blobContainer;
+        private Guid serviceId = Guid.NewGuid();
 
         //initialize blob configuration in the constructor. 
-        public SurfReportsController()
-        {
+        public SurfReportsSASController(StatelessServiceContext context)
+            : base(context)
+        {        
             //Cloud settings as per App.config. The storage account comes from the Azure portal (I created a blob account specifically
             //for this app) and you get the connection info from the "Access Keys" pane under "settings"
             this.account = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("BLOB"));
@@ -37,20 +45,26 @@ namespace ValetAccessManager.Controllers
         /// shared access signature for upload or download. Must be "upload" or "download" lolz
         /// </param>
         /// <returns></returns>
-        public StorageEntitySas Get(string SAStype)
+        public async Task<StorageEntitySas> Get(string SAStype)
         {
+            ServiceEventSource.Current.Message("SAS key requested from valet service of type {0}: {1}", SAStype, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             try
             {
                 var blobName = Guid.NewGuid();
                 StorageEntitySas blobSas = new StorageEntitySas();
                 // Retrieve a shared access signature of the location we should upload/download this file to/from
+                //Task<StorageEntitySas>[] getSas = new Task<StorageEntitySas>[1];
+                Task<StorageEntitySas> getSas;
+                //StorageEntitySas sas = new StorageEntitySas();
                 if (SAStype.ToLowerInvariant() == "upload")
                 {
-                    blobSas = this.GetSharedAccessReferenceForUpload(blobName.ToString());
+                    //getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForUpload(blobName.ToString()));
+                    getSas = new Task<StorageEntitySas>(() => this.GetSharedAccessReferenceForUpload(blobName.ToString()));
                 }
                 else if (SAStype.ToLowerInvariant() == "download")
                 {
-                    blobSas = this.GetSharedAccessReferenceForDownload(blobName.ToString());
+                    //getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForDownload(blobName.ToString()));
+                    getSas = new Task<StorageEntitySas>(() => this.GetSharedAccessReferenceForDownload(blobName.ToString()));
                 }
                 else
                 {
@@ -63,7 +77,12 @@ namespace ValetAccessManager.Controllers
 
                 Trace.WriteLine(string.Format("Blob Uri: {0} - Shared Access Signature: {1}", blobSas.BlobUri, blobSas.Credentials));
 
-                return blobSas;
+                //var retrieved =  Task.Factory.ContinueWhenAll<StorageEntitySas>(getSas, completedTask => { return sas; });
+                //var x = await Task.Run(() => getSas);
+
+                var retrieved = await getSas;
+                //return await retrieved;
+                return retrieved;
             }
             catch (Exception ex)
             {
@@ -79,6 +98,24 @@ namespace ValetAccessManager.Controllers
         private StorageEntitySas GetSharedAccessReferenceForDownload(string blobName)
         {
             var blobClient = this.account.CreateCloudBlobClient();
+            // here we need to enable CORS on the blob client. So, lets set up the Cors props! If you don't know what CORS is, 
+            //you'll need to google that
+            ServiceProperties blobServiceProperties = blobClient.GetServiceProperties();
+ 
+            //Create a new CORS properties configuration
+            blobServiceProperties.Cors = new CorsProperties();
+ 
+            blobServiceProperties.Cors.CorsRules.Add(new CorsRule()
+            {
+                AllowedHeaders = new List<string>() { "*" },
+                AllowedMethods = CorsHttpMethods.Put | CorsHttpMethods.Get | CorsHttpMethods.Head | CorsHttpMethods.Post,
+                AllowedOrigins = new List<string>() { "*" },
+                ExposedHeaders = new List<string>() { "*" },
+                MaxAgeInSeconds = 1800 // 30 minutes
+            });
+ 
+            //Set the properties on the client
+            blobClient.SetServiceProperties(blobServiceProperties);
             var container = blobClient.GetContainerReference(this.blobContainer);
 
             var blob = container.GetBlockBlobReference(blobName);
@@ -114,6 +151,25 @@ namespace ValetAccessManager.Controllers
         private StorageEntitySas GetSharedAccessReferenceForUpload(string blobName)
         {
             var blobClient = this.account.CreateCloudBlobClient();
+ 
+            // here we need to enable CORS on the blob client. So, lets set up the Cors props! If you don't know what CORS is, 
+            //you'll need to google that
+            ServiceProperties blobServiceProperties = blobClient.GetServiceProperties();
+ 
+            //Create a new CORS properties configuration
+            blobServiceProperties.Cors = new CorsProperties();
+ 
+            blobServiceProperties.Cors.CorsRules.Add(new CorsRule()
+            {
+                AllowedHeaders = new List<string>() { "*" },
+                AllowedMethods = CorsHttpMethods.Put | CorsHttpMethods.Get | CorsHttpMethods.Head | CorsHttpMethods.Post,
+                AllowedOrigins = new List<string>() { "*" },
+                ExposedHeaders = new List<string>() { "*" },
+                MaxAgeInSeconds = 1800 // 30 minutes
+            });
+ 
+            //Set the properties on the client
+            blobClient.SetServiceProperties(blobServiceProperties);
             var container = blobClient.GetContainerReference(this.blobContainer);
 
             var blob = container.GetBlockBlobReference(blobName);
@@ -139,11 +195,5 @@ namespace ValetAccessManager.Controllers
             };
         }
 
-        public struct StorageEntitySas
-        {
-            public string Credentials;
-            public Uri BlobUri;
-            public string Name;
-        }
     }
 }

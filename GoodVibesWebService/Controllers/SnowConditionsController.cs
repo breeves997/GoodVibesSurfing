@@ -55,7 +55,6 @@ namespace GoodVibesWebService.Controllers
             {
                 if (ex is TimeoutException || ex.InnerException is TimeoutException)
                 {
-                    string x = "fsdsf";
                     //implement retry pattern
                 }
 

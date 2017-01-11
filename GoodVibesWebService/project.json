@@ -11,9 +11,11 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+    "Microsoft.Owin.Cors": "3.0.1",
     "Microsoft.ServiceFabric": "5.3.311",
     "Microsoft.ServiceFabric.Data": "2.3.311",
-    "Microsoft.ServiceFabric.Services": "2.3.311"
+    "Microsoft.ServiceFabric.Services": "2.3.311",
+    "Newtonsoft.Json": "9.0.1"
   },
 
   "tools": {
@@ -26,6 +28,9 @@
           "target": "project"
         },
         "GetSnowConditions.Interfaces": {
+          "target": "project"
+        },
+        "ValetAccessManager.Interfaces": {
           "target": "project"
         }
       }

@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/simple-sidebar.css">
+    <title>Service Fabric Samplers</title>
+
+</head>
+<body> 
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li>
+                    <a id="menu-toggle-2" href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-th-large fa-stack-1x"></i></span>Toggle</a>
+                </li>
+ 
+                <li class="active">
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span> Overview</a>
+                       <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="#">link1</a></li>
+                        <li><a href="#">link2</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa  fa-cloud-download fa-stack-1x "></i></span>Service health</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/health/failure.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Service failure</a></li>
+                        <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>link2</a></li>
+ 
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Meh</a>
+                </li>
+                <li>
+                    <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-database fa-stack-1x "></i></span>Data</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/data/valet.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Blob valet key</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bolt fa-stack-1x "></i></span>Events</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wrench fa-stack-1x "></i></span>Service patterns</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bug fa-stack-1x "></i></span>Bugs and code</a>
+                </li>
+            </ul>
+        </div><!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <h2 >Valet Key Pattern with Blob Storage</h2>
+                <div class="row">
+                    <div class="well">
+                        <p>This page demonstrates use of the <a href="ahttps://msdn.microsoft.com/en-us/library/dn568102.aspx">valet key pattern</a> which is
+                        a useful tool when you want to grant direct access to a storage account, such as Azure DB, blob storage, NoSQL, data lakes, etc
+                        but you don't want to route all traffic through your main application.</p>
+                        <br />
+                        <p>On this page, you can request a Shared Access Signature from the service ValetAccessManager to directly access a blob storage account.
+                        The valet keys can be requested for upload and download, with each key granting access to the blob storage account for 5 minutes, only 
+                        on for the operation specified.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="btn btn-lg">
+                            <a id="getUploadSAS" href="#">Get key for upload</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn btn-lg">
+                            <a id="getDownloadSAS" href="#">Get key for download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <form>
+                        <div style="margin-left: 20px;">
+                            <h3>File Uploader</h3>
+                            <p>
+                                <strong>SAS URI</strong>:
+                                <br/>
+                                <span class="input-control text">
+                                    <input type="text" id="sasUrl" style="width: 50%"
+                                           value="<fill in the SAS URL here>"/>
+                                </span>
+                            </p>
+                            <p>
+                                <strong>File To Upload</strong>:
+                                <br/>
+                                <span class="input-control text">
+                                    <input type="file" id="file" name="file" style="width: 50%"/>
+                                </span>
+                            </p>
+                            <div id="output">
+                                  
+                                <strong>File Properties:</strong>
+                                <br/>
+                                <p>
+                                    Name: <span id="fileName"></span>
+                                </p>
+                                <p>
+                                    File Size: <span id="fileSize"></span> bytes.
+                                </p>
+                                <p>
+                                    File Type: <span id="fileType"></span>
+                                </p>
+                                <p>
+                                    <input type="button" id="buttonUploadFile" value="Upload File"/>
+                                </p>
+                                <p>
+                                    <strong>Progress</strong>: <span id="fileUploadProgress">0.00 %</span>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../vendor/sidebar-menu.js"></script>
+    <script src="../health/failure.js"></script>
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+    <script type="text/javascript">
+        //TODO I NEED TO KNOW HOW DA EFF TO FIND SERVICES FROM EXTERNAL SOURCES!!!! I need a gatweway project or something.
+        var serviceUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+        $(document).ready(function () {
+            $('#getUploadSAS').click(function () {
+                $.ajax({
+                    url: serviceUrl + '/api/ValetKey/upload',
+                    dataType: 'application/json',
+                    method: 'GET'
+                })
+               .done(function (sasReponse) {
+                   console.log(sasReponse);
+               });
+
+            });
+            $('#getDownloadSAS').click(function () {
+                $.ajax({
+                    url: serviceUrl + '/api/ValetKey/download',
+                    dataType: 'application/json',
+                    method: 'GET'
+                })
+               .success(function (sasReponse) {
+                   console.log(sasReponse);
+               });
+
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        var reader = null;
+        var selectedFile = null;
+        $(document).ready(function () {
+            reader = new FileReader();
+            reader.onloadend = function (evt) {
+                if (evt.target.readyState == FileReader.DONE) {
+                    var baseUrl = $("#sasUrl").val();
+                    var indexOfQueryStart = baseUrl.indexOf("?");
+                    submitUri = baseUrl.substring(0, indexOfQueryStart) + '/' + selectedFile.name + baseUrl.substring(indexOfQueryStart);
+                    console.log(submitUri);
+                    var requestData = new Uint8Array(evt.target.result);
+                    $.ajax({
+                        url: submitUri,
+                        type: "PUT",
+                        data: requestData,
+                        processData: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('x-ms-blob-type', 'BlockBlob');
+                            xhr.setRequestHeader('x-ms-blob-content-type', selectedFile.type);
+                            xhr.setRequestHeader('x-ms-meta-uploadvia', 'CORS Demo');
+                            xhr.setRequestHeader('Content-Length', requestData.length);
+                        },
+                        success: function (data, status) {
+                            alert("File uploaded successfully");
+                            console.log(data);
+                            console.log(status);
+                        },
+                        error: function (xhr, desc, err) {
+                            console.log(desc);
+                            console.log(err);
+                        }
+                    });
+                }
+            };
+            $("#file").bind('change', function (e) {
+                var files = e.target.files;
+                selectedFile = files[0];
+                $("#fileName").text(selectedFile.name);
+                $("#fileSize").text(selectedFile.size);
+                $("#fileType").text(selectedFile.type);
+            });
+            $("#buttonUploadFile").click(function (e) {
+                if (selectedFile == null) {
+                    alert("Please select a file first.");
+                }
+                else {
+                    var fileContent = selectedFile.slice(0, selectedFile.size - 1);
+                    reader.readAsArrayBuffer(fileContent);
+                }
+            });
+        })
+     
+    </script>
+</body>
+</html>

@@ -43,6 +43,15 @@
           }
         }
       },
+      "Microsoft.AspNet.Cors/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/System.Web.Cors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Web.Cors.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Antiforgery/1.0.1": {
         "type": "package",
         "dependencies": {
@@ -1068,6 +1077,32 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "Microsoft.Owin/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Owin": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/Microsoft.Owin.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Owin.dll": {}
+        }
+      },
+      "Microsoft.Owin.Cors/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Cors": "5.0.0",
+          "Microsoft.Owin": "3.0.1",
+          "Owin": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/Microsoft.Owin.Cors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Owin.Cors.dll": {}
+        }
+      },
       "Microsoft.ServiceFabric/5.3.311": {
         "type": "package",
         "compile": {
@@ -1122,6 +1157,15 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Owin/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Owin.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Owin.dll": {}
         }
       },
       "System.Buffers/4.0.0": {
@@ -1467,6 +1511,9 @@
       },
       "GetSnowConditions.Interfaces/1.0.0": {
         "type": "project"
+      },
+      "ValetAccessManager.Interfaces/1.0.0": {
+        "type": "project"
       }
     }
   },
@@ -1487,6 +1534,16 @@
         "runtimes/win7-arm/native/libuv.dll",
         "runtimes/win7-x64/native/libuv.dll",
         "runtimes/win7-x86/native/libuv.dll"
+      ]
+    },
+    "Microsoft.AspNet.Cors/5.0.0": {
+      "sha512": "jNwFhEnm0jRlaRCgHEk52hJQltVoM2Bllysv2NtPYrgsVWyS3r5BOtCXkM/lEZ5AdUUBOvha+4QAVcVp1MZp5g==",
+      "type": "package",
+      "path": "Microsoft.AspNet.Cors/5.0.0",
+      "files": [
+        "Microsoft.AspNet.Cors.5.0.0.nupkg.sha512",
+        "Microsoft.AspNet.Cors.nuspec",
+        "lib/net45/System.Web.Cors.dll"
       ]
     },
     "Microsoft.AspNetCore.Antiforgery/1.0.1": {
@@ -2421,6 +2478,28 @@
         "runtime.json"
       ]
     },
+    "Microsoft.Owin/3.0.1": {
+      "sha512": "64yZsGN9uRnXNVAyAT4F6KWmdDUJ6yX4uqzxKTdGANKH1oMt0IKZ7THRRa3mXIOo8iSu4tq/DCBUycUY9pXZzw==",
+      "type": "package",
+      "path": "Microsoft.Owin/3.0.1",
+      "files": [
+        "Microsoft.Owin.3.0.1.nupkg.sha512",
+        "Microsoft.Owin.nuspec",
+        "lib/net45/Microsoft.Owin.XML",
+        "lib/net45/Microsoft.Owin.dll"
+      ]
+    },
+    "Microsoft.Owin.Cors/3.0.1": {
+      "sha512": "b3dMOu1/nqjslrEOWnbxIBk4OgeDUXNUtiGmymvzU1nBb8CyWmtMfPIxqu1f7jJEz87R4FUGS8UvvZatwbPP6w==",
+      "type": "package",
+      "path": "Microsoft.Owin.Cors/3.0.1",
+      "files": [
+        "Microsoft.Owin.Cors.3.0.1.nupkg.sha512",
+        "Microsoft.Owin.Cors.nuspec",
+        "lib/net45/Microsoft.Owin.Cors.XML",
+        "lib/net45/Microsoft.Owin.Cors.dll"
+      ]
+    },
     "Microsoft.ServiceFabric/5.3.311": {
       "sha512": "C9BguBr2ITYOPzZEdTdC34wSWtM8KL2zXTpnUeiGxlLDtnBHV9uaaDiiVXZTOqCdjMRmo7SH8dDKA75OACbWjw==",
       "type": "package",
@@ -2482,6 +2561,16 @@
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "tools/install.ps1"
+      ]
+    },
+    "Owin/1.0.0": {
+      "sha512": "OseTFniKmyp76mEzOBwIKGBRS5eMoYNkMKaMXOpxx9jv88+b6mh1rSaw43vjBOItNhaLFG3d0a20PfHyibH5sw==",
+      "type": "package",
+      "path": "Owin/1.0.0",
+      "files": [
+        "Owin.1.0.0.nupkg.sha512",
+        "Owin.nuspec",
+        "lib/net40/Owin.dll"
       ]
     },
     "System.Buffers/4.0.0": {
@@ -4128,6 +4217,10 @@
     "GetSnowConditions.Interfaces/1.0.0": {
       "type": "project",
       "msbuildProject": "../GetSnowConditions.Interfaces/GetSnowConditions.Interfaces.csproj"
+    },
+    "ValetAccessManager.Interfaces/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../ValetAccessManager.Interfaces/ValetAccessManager.Interfaces.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -4143,13 +4236,16 @@
       "Microsoft.Extensions.Logging.Console >= 1.0.0",
       "Microsoft.Extensions.Logging.Debug >= 1.0.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
+      "Microsoft.Owin.Cors >= 3.0.1",
       "Microsoft.ServiceFabric >= 5.3.311",
       "Microsoft.ServiceFabric.Data >= 2.3.311",
-      "Microsoft.ServiceFabric.Services >= 2.3.311"
+      "Microsoft.ServiceFabric.Services >= 2.3.311",
+      "Newtonsoft.Json >= 9.0.1"
     ],
     ".NETFramework,Version=v4.5.2": [
       "CloudUtilities",
-      "GetSnowConditions.Interfaces"
+      "GetSnowConditions.Interfaces",
+      "ValetAccessManager.Interfaces"
     ]
   },
   "tools": {},

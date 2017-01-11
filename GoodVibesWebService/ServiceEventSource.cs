@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace GetSnowConditions
+namespace GoodVibesWebService
 {
-    [EventSource(Name = "MyCompany-GoodVibesSurfing-GetSnowConditions")]
+    [EventSource(Name = "MyCompany-GoodVibesSurfing-GoodVibesWebService")]
     internal sealed class ServiceEventSource : EventSource
     {
         public static readonly ServiceEventSource Current = new ServiceEventSource();
@@ -18,7 +18,7 @@ namespace GetSnowConditions
         {
             // A workaround for the problem where ETW activities do not get tracked until Tasks infrastructure is initialized.
             // This problem will be fixed in .NET Framework 4.6.2.
-            Task.Run(() => { });
+            Task.Run(() => { }).Wait();
         }
 
         // Instance constructor is private to enforce singleton semantics
@@ -65,19 +65,20 @@ namespace GetSnowConditions
         }
 
         [NonEvent]
-        public void ServiceMessage(StatefulService service, string message, params object[] args)
+        public void ServiceMessage(ServiceContext serviceContext, string message, params object[] args)
         {
             if (this.IsEnabled())
             {
+
                 string finalMessage = string.Format(message, args);
                 ServiceMessage(
-                    service.Context.ServiceName.ToString(),
-                    service.Context.ServiceTypeName,
-                    service.Context.ReplicaId,
-                    service.Context.PartitionId,
-                    service.Context.CodePackageActivationContext.ApplicationName,
-                    service.Context.CodePackageActivationContext.ApplicationTypeName,
-                    service.Context.NodeContext.NodeName,
+                    serviceContext.ServiceName.ToString(),
+                    serviceContext.ServiceTypeName,
+                    GetReplicaOrInstanceId(serviceContext),
+                    serviceContext.PartitionId,
+                    serviceContext.CodePackageActivationContext.ApplicationName,
+                    serviceContext.CodePackageActivationContext.ApplicationTypeName,
+                    serviceContext.NodeContext.NodeName,
                     finalMessage);
             }
         }
@@ -148,13 +149,36 @@ namespace GetSnowConditions
 
         private const int ServiceRequestStopEventId = 6;
         [Event(ServiceRequestStopEventId, Level = EventLevel.Informational, Message = "Service request '{0}' finished", Keywords = Keywords.Requests)]
-        public void ServiceRequestStop(string requestTypeName, string exception = "")
+        public void ServiceRequestStop(string requestTypeName)
         {
-            WriteEvent(ServiceRequestStopEventId, requestTypeName, exception);
+            WriteEvent(ServiceRequestStopEventId, requestTypeName);
+        }
+
+        private const int ServiceRequestFailedEventId = 7;
+        [Event(ServiceRequestFailedEventId, Level = EventLevel.Error, Message = "Service request '{0}' failed", Keywords = Keywords.Requests)]
+        public void ServiceRequestFailed(string requestTypeName, string exception)
+        {
+            WriteEvent(ServiceRequestFailedEventId, exception);
         }
         #endregion
 
         #region Private methods
+        private static long GetReplicaOrInstanceId(ServiceContext context)
+        {
+            StatelessServiceContext stateless = context as StatelessServiceContext;
+            if (stateless != null)
+            {
+                return stateless.InstanceId;
+            }
+
+            StatefulServiceContext stateful = context as StatefulServiceContext;
+            if (stateful != null)
+            {
+                return stateful.ReplicaId;
+            }
+
+            throw new NotSupportedException("Context type not supported.");
+        }
 #if UNSAFE
         private int SizeInBytes(string s)
         {
