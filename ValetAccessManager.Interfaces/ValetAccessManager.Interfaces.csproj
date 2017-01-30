@@ -92,7 +92,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISurfReportInterface.cs" />
+    <Compile Include="Contracts\SharedAccessSignature.cs" />
+    <Compile Include="ISurfReportsSASController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

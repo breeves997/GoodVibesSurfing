@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using ValetAccessManager.Interfaces;
 using CloudUtilities;
 using ValetAccessManager.Interfaces.Contracts;
-using System.Web.Http;
 
 namespace GoodVibesWebService.Controllers
 {
     [Route("api/[controller]")]
-    public class ValetKeyController : ApiController
+    public class ValetKeyController : Controller
     {
+        private readonly ISASKeyProvider Svc;
+        public ValetKeyController(ISASKeyProvider svc)
+        {
+            Svc = svc;
+
+        }
         // GET api/ValetKey/upload
         /// <summary>
         /// Gets a shared access signature key for blob uploads/downloads
@@ -30,9 +35,7 @@ namespace GoodVibesWebService.Controllers
             if (String.IsNullOrWhiteSpace(requestType)) throw new InvalidOperationException("you need to give a request type");
             if (String.IsNullOrWhiteSpace(blobName)) throw new InvalidOperationException("you need to give a blob name");
             ServiceEventSource.Current.Message("SAS key requested through API of type {0}: {1}", requestType, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            var valetKeyUri = new ServiceUriBuilder("ValetAccessManager");
-            var surfSASclient = ServiceProxy.Create<ISurfReportsSASController>(valetKeyUri.ToUri());
-            StorageEntitySas sasKey = await surfSASclient.Get(Utilities.ParseEnum<SASAllowedRequests>(requestType));
+            StorageEntitySas sasKey = await Svc.Get(Utilities.ParseEnum<SASAllowedRequests>(requestType));
             //string ben = await "sdfjadslk";
 
             return sasKey;

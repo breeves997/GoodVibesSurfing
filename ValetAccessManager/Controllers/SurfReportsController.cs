@@ -18,7 +18,7 @@ using ValetAccessManager.Interfaces.Contracts;
 
 namespace ValetAccessManager.Controllers
 {
-    internal sealed class SurfReportsSASController : StatelessService, ISurfReportsSASController
+    internal sealed class SurfReportsSASController : StatelessService, ISASKeyProvider
     {
         private readonly CloudStorageAccount account;
         private readonly string blobContainer;
@@ -112,7 +112,6 @@ namespace ValetAccessManager.Controllers
                 AllowedHeaders = new List<string>() { "*" },
                 AllowedMethods = CorsHttpMethods.Put | CorsHttpMethods.Get | CorsHttpMethods.Head | CorsHttpMethods.Post,
                 AllowedOrigins = new List<string>() { "*" },
-                ExposedHeaders = new List<string>() { "*" },
                 MaxAgeInSeconds = 1800 // 30 minutes
             });
  
@@ -166,7 +165,6 @@ namespace ValetAccessManager.Controllers
                 AllowedHeaders = new List<string>() { "*" },
                 AllowedMethods = CorsHttpMethods.Put | CorsHttpMethods.Get | CorsHttpMethods.Head | CorsHttpMethods.Post,
                 AllowedOrigins = new List<string>() { "*" },
-                ExposedHeaders = new List<string>() { "*" },
                 MaxAgeInSeconds = 1800 // 30 minutes
             });
  

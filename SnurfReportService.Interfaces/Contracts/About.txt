@@ -1,0 +1,5 @@
+﻿The data contracts are pretty weird in this because we will be using them with IReliableCollections. There are a few 
+recommendation on IRealiableCollections that I'll just refer you to rather than trying to explain it myself
+
+https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-work-with-reliable-collections
+https://msdn.microsoft.com/library/ms731083.aspx
