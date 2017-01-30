@@ -14,6 +14,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using System.Fabric;
 using ValetAccessManager.Interfaces;
 using System.Threading.Tasks;
+using ValetAccessManager.Interfaces.Contracts;
 
 namespace ValetAccessManager.Controllers
 {
@@ -45,26 +46,30 @@ namespace ValetAccessManager.Controllers
         /// shared access signature for upload or download. Must be "upload" or "download" lolz
         /// </param>
         /// <returns></returns>
-        public async Task<StorageEntitySas> Get(string SAStype)
+        public async Task<StorageEntitySas> Get(SASAllowedRequests request)
         {
-            ServiceEventSource.Current.Message("SAS key requested from valet service of type {0}: {1}", SAStype, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            ServiceEventSource.Current.Message("SAS key requested from valet service of type {0}: {1}", request, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            // Retrieve a shared access signature of the location we should upload/download this file to/from
             try
             {
                 var blobName = Guid.NewGuid();
                 StorageEntitySas blobSas = new StorageEntitySas();
-                // Retrieve a shared access signature of the location we should upload/download this file to/from
-                //Task<StorageEntitySas>[] getSas = new Task<StorageEntitySas>[1];
-                Task<StorageEntitySas> getSas;
-                //StorageEntitySas sas = new StorageEntitySas();
-                if (SAStype.ToLowerInvariant() == "upload")
+
+                //Create an array of tasks which will be executed asynchronously in order to retrieve the SAS credentials
+                //I can't figure out how to make this work without task factories
+                //TODO: make this work with normal tasks instead of a factory which should be unnecessary
+                Task<StorageEntitySas>[] getSas = new Task<StorageEntitySas>[1];
+
+                StorageEntitySas sas = new StorageEntitySas();
+                if (request == SASAllowedRequests.Upload)
                 {
-                    //getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForUpload(blobName.ToString()));
-                    getSas = new Task<StorageEntitySas>(() => this.GetSharedAccessReferenceForUpload(blobName.ToString()));
+                    getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForUpload(blobName.ToString()));
+
                 }
-                else if (SAStype.ToLowerInvariant() == "download")
+                else if (request == SASAllowedRequests.Download)
                 {
-                    //getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForDownload(blobName.ToString()));
-                    getSas = new Task<StorageEntitySas>(() => this.GetSharedAccessReferenceForDownload(blobName.ToString()));
+                    getSas[0] = Task.Factory.StartNew(() => sas = this.GetSharedAccessReferenceForDownload(blobName.ToString()));
                 }
                 else
                 {
@@ -77,12 +82,9 @@ namespace ValetAccessManager.Controllers
 
                 Trace.WriteLine(string.Format("Blob Uri: {0} - Shared Access Signature: {1}", blobSas.BlobUri, blobSas.Credentials));
 
-                //var retrieved =  Task.Factory.ContinueWhenAll<StorageEntitySas>(getSas, completedTask => { return sas; });
-                //var x = await Task.Run(() => getSas);
+                var retrieved = Task.Factory.ContinueWhenAll<StorageEntitySas>(getSas, completedTask => { return sas; });
 
-                var retrieved = await getSas;
-                //return await retrieved;
-                return retrieved;
+                return await retrieved;
             }
             catch (Exception ex)
             {
