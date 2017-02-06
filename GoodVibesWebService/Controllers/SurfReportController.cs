@@ -18,6 +18,9 @@ namespace GoodVibesWebService.Controllers
     [Route("api/[controller]")]
     public class SurfReportController : Controller
     {
+        /// <summary>
+        /// A proxy to the stateful service for posting surf reports
+        /// </summary>
         private readonly ISurfReportsService UserReportsSvc;
         public SurfReportController(ISurfReportsService svc)
         {
@@ -29,11 +32,22 @@ namespace GoodVibesWebService.Controllers
             SurfReport report = await UserReportsSvc.GetSurfReport(id);
             return report;
         }
+        /// <summary>
+        /// Have I mentioned I don't 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="poster"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<SurfReport>> Get(DateTime date)
+        public async Task<IEnumerable<SurfReport>> Get(DateTime date, string poster)
         {
-            IEnumerable<SurfReport> report = await UserReportsSvc.GetDailySurfReports(date.Date);
-            return report;
+            if (String.IsNullOrWhiteSpace(poster))
+            {
+                IEnumerable<SurfReport> report = await UserReportsSvc.GetDailySurfReports(date.Date);
+                return report;
+            }
+            else
+                return await UserReportsSvc.GetDailySurfReportByKey(date.Date, poster);
         }
         [HttpPost]
         public async Task<SurfReport> Post([FromBody] SurfReport report)

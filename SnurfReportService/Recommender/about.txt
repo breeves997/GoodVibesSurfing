@@ -1,0 +1,26 @@
+﻿There is nothing here yet....
+
+I want to use the pipes and filters pattern https://msdn.microsoft.com/en-us/library/dn568100.aspx to create a 'recommendation' of where to go surfing/shredding. 
+Basically, there will be a series of discrete computations to be made. The criteria for surf and snow recommendations will each have 
+similarities (such as average user rating), but they will also have differences (eg temperature is more important for snow recommendations). The pipes and filters pattern is
+pretty simple and basically just separates each step and re-uses code where possible. Basic stuff.
+
+Calculation steps needed. Obviously, these are all mocks because there is no real data:
+
+	Calculate today's 'effective rating' by doing something like applying a weighted (poisson?) score 
+	for the past 2 or 3 days of user rankings by location (shared logic)
+
+	Create a "how crowded" index by looking at number of reports posted (shared logic)
+
+	Surfing needs something with wave size and period
+
+	Snow reports needs some things with visibility and temperature
+
+	Some process to put it all the previous calculations together (shared logic)
+
+For implementation notes, I don't think it's easy to create more than one service instance in a given application. This system could (and maybe should) be it's own service,
+but I feel weird making a new service for every single piece of code. So, instead I'll build out the logic in a series of classes within this namespace, and inject the 
+recommender system into the snurf report service as a dependency. 
+
+Basically, the snurf report service has two jobs: CRUD on user reports and system recommendations based on those reports
+

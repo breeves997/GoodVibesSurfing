@@ -3,5 +3,6 @@
   <PropertyGroup>
     <ApplicationUrl>http://localhost:8088/index.html</ApplicationUrl>
     <ShowAllFiles>true</ShowAllFiles>
+    <ApplicationDebugMode>Keep</ApplicationDebugMode>
   </PropertyGroup>
 </Project>

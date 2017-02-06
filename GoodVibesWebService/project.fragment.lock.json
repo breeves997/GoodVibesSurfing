@@ -8,12 +8,12 @@
         "bin/Debug/CloudUtilities.dll": {}
       },
       "runtime": {
-        "../packages/Microsoft.ServiceFabric.5.4.145/lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll": {},
-        "../packages/Microsoft.ServiceFabric.5.4.145/lib/net45/Microsoft.ServiceFabric.Internal.dll": {},
-        "../packages/Microsoft.ServiceFabric.5.4.145/lib/net45/System.Fabric.Strings.dll": {},
-        "../packages/Microsoft.ServiceFabric.5.4.145/lib/net45/System.Fabric.dll": {},
-        "../packages/Microsoft.ServiceFabric.Data.2.4.145/lib/net45/Microsoft.ServiceFabric.Data.Interfaces.dll": {},
-        "../packages/Microsoft.ServiceFabric.Data.2.4.145/lib/net45/Microsoft.ServiceFabric.Data.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/Microsoft.ServiceFabric.Internal.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/System.Fabric.Strings.dll": {},
+        "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/System.Fabric.dll": {},
+        "../packages/Microsoft.ServiceFabric.Data.2.3.311/lib/net45/Microsoft.ServiceFabric.Data.Interfaces.dll": {},
+        "../packages/Microsoft.ServiceFabric.Data.2.3.311/lib/net45/Microsoft.ServiceFabric.Data.dll": {},
         "bin/Debug/CloudUtilities.dll": {}
       },
       "contentFiles": {

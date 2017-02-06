@@ -27,10 +27,15 @@ namespace GoodVibesWebService.Controllers
             return report;
         }
         [HttpGet]
-        public async Task<IEnumerable<SnowReport>> Get(DateTime date)
+        public async Task<IEnumerable<SnowReport>> Get(DateTime date, string poster)
         {
-            IEnumerable<SnowReport> report = await UserReportsSvc.GetDailySnowReports(date.Date);
-            return report;
+            if (String.IsNullOrWhiteSpace(poster))
+            {
+                IEnumerable<SnowReport> report = await UserReportsSvc.GetDailySnowReports(date.Date);
+                return report;
+            }
+            else
+                return await UserReportsSvc.GetDailySnowReportByKey(date.Date, poster);
         }
         [HttpPost]
         public async Task<SnowReport> Post([FromBody] SnowReport report)

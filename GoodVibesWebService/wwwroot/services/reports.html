@@ -1,0 +1,381 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/simple-sidebar.css">
+    <link rel="stylesheet" href="../vendor/jquery-simple-datetimepicker-1.12.0/jquery.simple-dtpicker.css">
+    <title>Service Fabric Samplers</title>
+
+</head>
+<body>
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li>
+                    <a id="menu-toggle-2" href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-th-large fa-stack-1x"></i></span>Toggle</a>
+                </li>
+
+                <li class="active">
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span> Overview</a>
+                       <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="#">General Notes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa  fa-cloud-download fa-stack-1x "></i></span>Service health</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/health/failure.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Service failure</a></li>
+                        <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>link2</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cog fa-stack-1x "></i></span>Services</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/services/reports.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-telegram fa-stack-1x "></i></span>Snurf Reports</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-database fa-stack-1x "></i></span>Data</a>
+                    <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                        <li><a href="/data/valet.html"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Blob valet key</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bolt fa-stack-1x "></i></span>Events</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wrench fa-stack-1x "></i></span>Service patterns</a>
+                </li>
+                <li>
+                    <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-bug fa-stack-1x "></i></span>Bugs and code</a>
+                </li>
+            </ul>
+        </div><!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>User Reports Service</h1>
+                        <p>This web page allows users to post and retrieve surf and snow reports from the stateful service SnurfReportService</p>
+                        <p>
+                            The stateful service maintains reliable dictionary collections of SnowReports and SurfReports ($/SnurfReportService.Interfaces/Contracts)
+                            which are hypothetical user reports of surfing and snow conditions at various locations. Had a great shred fest at Revelstoke mountain? Post a report!
+                            Caught some gnarly waves down in Santa Monica? Tell the workld!
+                        </p>
+                        <h2>Put a plank under your feet and ride!</h2>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <h2>Reliable collections: the basics according to Ben</h2>
+                    <div class="well">
+                        <p>
+                            The API for reliable collections (ReliableDictioary, ReliableQueue) will be familiar to anyone who has worked with donet collections. The
+                            important distinction is that reliable collections are ALL I/O processes which replicate the data structure to local disk on the machine
+                            executing the assembly. This brings up in my opinion the two most important points: all operations need to be async (due to disk I/O)
+                            and the data structures held by the reliable collections MUST be considered (or designed) as immutable. The reason for this is that
+                            the object as it exists in memory does not represent the object as it exists on disk. Updating an object in memory does not mean the object
+                            is updated by referencec in the reliable collection since there is no reference to the object in code from the perspective of the
+                            reliable collection. A more in depth explanation can be found <a href="https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-work-with-reliable-collections">here</a>
+                        </p>
+                        <br />
+                        <b>Okay, enough chit-chat, tell me how I can play with this to see what's happening</b>
+                        <br />
+                        <p>
+                            The web front end ($/GoodVibesWebService/Controllers/(Snow|Surf)ReportController) is injected with a proxy to the stateful service $/SnurfReportService. As explained on the <a href="../index.html">home page</a>.
+                            If you're not familiar with constructor injection method of Dependency Injection (DI) google it. The IoC (inversion of control) container which handles the injection is the
+                            IoC container which ships with the ASP.NET MV6 framework. You can find that code in the Startup.cs class of the GoodVibesWebService project under the method "ConfigureServices".
+                        </p>
+                        <p>
+                            The controller basically just forwards requests to the stateful service's SnurfReportService class, which implements both the ISnowReportService
+                            and ISurfReportService contracts. Side note - the communication protocol (RPC) used by default by service fabric does't support generic interfaces, hence why we need two interfaces which
+                            basically accomplish the same thing
+                        </p>
+                        <p>The stateful services persist immutable data objects to the reliable dictionaries contained within the stateful service. The dictionaries are seeded with some sample data on startup</p>
+                    </div>
+                </div>
+
+                <!--Region get todays reports-->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="btn btn-lg">
+                                <button class="btn btn-lg" type="button" id="dailySurfReports">Get daily surf reports</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn btn-lg">
+                                <button class="btn btn-lg" type="button" id="dailySnowReports">Get daily snow reports</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-striped">
+
+                            <table class="table" id="snowReports">
+                                <caption>Snow Reports</caption>
+                                <thead>
+                                    <tr>
+                                        <td>Rating</td>
+                                        <td>Reviewer Name</td>
+                                        <td>Location</td>
+                                        <td>Date</td>
+                                        <td>Visibility</td>
+                                        <td>Temperature (C)</td>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-striped">
+                            <table class="table" id="surfReports">
+                                <caption>Surf Reports</caption>
+                                <thead>
+                                    <tr>
+                                        <td>Rating</td>
+                                        <td>Reviewer Name</td>
+                                        <td>Location</td>
+                                        <td>Date</td>
+                                        <td>Wave Size (m)</td>
+                                        <td>Period (s)</td>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--endregion get todays reports-->
+                <br />
+                <hr />
+                <!--Region Submit reports-->
+                <div class="row container-fluid">
+                    <div class="row container-fluid">
+                        <button id="create-snow-report" class="btn btn-lg" type="button">Post a snow report</button>
+
+                        <form id="snow-report" style="display: none">
+                            <div class="form-group">
+                                <label for="snow-poster">Reviewer Name</label>
+                                <input type="text" class="form-control" id="snow-poster" placeholder="Enter name">
+                                <small id="snow-posterHelp" class="form-text text-muted">Reviews are searchable by this name and date</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="snow-rating">Select a rating</label>
+                                <select class="form-control" id="snow-rating">
+                                    <option value="1">Awful</option>
+                                    <option value="2">Poor</option>
+                                    <option value="3">Mediocre</option>
+                                    <option value="4">Good</option>
+                                    <option value="5">Great</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="snow-location">Location</label>
+                                <input type="text" class="form-control" id="snow-location" placeholder="Where did you go?">
+                            </div>
+                            <div class="form-group">
+                                <label for="temperature">Temperature</label>
+                                <input type="number" class="form-control" id="temperature" placeholder="Temp in Celcius">
+                            </div>
+                            <div class="form-group">
+                                <label for="visibility">Visibility</label>
+                                <input type="text" class="form-control" id="visibility" placeholder="eg bluebird, whiteout, overcast">
+                            </div>
+                            <div class="form-group">
+                                <label for="snow-attachment">Attachment</label>
+                                <input type="file" class="form-control-file" id="snow-attachment" aria-describedby="fileHelp">
+                                <small id="snow-fileHelp" class="form-text text-muted">This doesn't work yet, since I don't have the blob storage working perfectly</small>
+                            </div>
+                            <div class="form-group">
+                                <div class='input-group date'>
+                                    <label for="snow-date">Shred Date</label>
+                                    <input type='text' class="form-control" id='snow-date' value="" />
+                                </div>
+                            </div>
+                            <button id="snow-submit" type="button" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+
+                    <div class="row container-fluid">
+                        <button id="create-surf-report" class="btn btn-lg" type="button">Post a surf report</button>
+
+                        <form id="surf-report" style="display: none">
+                            <div class="form-group">
+                                <label for="surf-poster">Reviewer Name</label>
+                                <input type="text" class="form-control" id="surf-poster" placeholder="Enter name">
+                                <small id="surf-posterHelp" class="form-text text-muted">Reviews are searchable by this name and date</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="surf-rating">Select a rating</label>
+                                <select class="form-control" id="surf-rating">
+                                    <option value="1">Awful</option>
+                                    <option value="2">Poor</option>
+                                    <option value="3">Mediocre</option>
+                                    <option value="4">Good</option>
+                                    <option value="5">Great</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="surf-location">Location</label>
+                                <input type="text" class="form-control" id="surf-location" placeholder="Where did you go?">
+                            </div>
+                            <div class="form-group">
+                                <label for="wave-size">Wave Size</label>
+                                <input type="number" class="form-control" id="wave-size" placeholder="Size in meters">
+                            </div>
+                            <div class="form-group">
+                                <label for="visibility">Period</label>
+                                <input type="number" class="form-control" id="period" placeholder="Period in s">
+                            </div>
+                            <div class="form-group">
+                                <label for="surf-attachment">Attachment</label>
+                                <input type="file" class="form-control-file" id="surf-attachment" aria-describedby="fileHelp">
+                                <small id="surf-fileHelp" class="form-text text-muted">This doesn't work yet, since I don't have the blob storage working perfectly</small>
+                            </div>
+                            <div class="form-group">
+                                <div class='input-group date'>
+                                    <label for="surf-date">Surf Date</label>
+                                    <input type='text' class="form-control" id='surf-date' value="" />
+                                </div>
+                            </div>
+                            <button id="surf-submit" type="button" class="btn btn-primary">Submit</button>
+                        </form>
+
+                    </div>
+
+                </div>
+                <!--Endregion submit reports-->
+                <br />
+                <hr />
+                <!--Region get single report-->
+                <div class="row container-fluid">
+                    <h4>Single report actions</h4>
+                    <div class="well">
+                        <p>
+                            Here you can search for single reports by date and poster name. The key for the reliabe
+                            dictionaries is the hash of the post date and post name. The reports for each day are stored
+                            in the reliable dictionary "Daily(Surf|Snow)Reports" in the snurf report service.
+                        </p>
+                        <p>TODO: Get Put/Patch running for this. Add an edit button which when clicked, turns off read-only and adds a 'save' button. 
+                        Also, need to return the id with the response. May want to put the id on the data contract itself like a normal person...</p>
+                    </div>
+
+                    <div class="row">
+                        <h4>Get snow report by poster and date</h4>
+                        <div class="col-md-4">
+                            <label for="snow-date-search">Post Date</label>
+                            <input type='text' class="form-control" id='snow-date-search' value="" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="snow-name-search">Poster Name</label>
+                            <input type='text' class="form-control" id='snow-name-search' placeholder="Must match exactly..." value="" />
+                        </div>
+                        <div class="col-md-2">
+                            <button id="surf-search" type="button" class="btn btn-secondary">Search</button>
+                        </div>
+                        <div id="surf-search-output" class="col-md-12">
+                            <div class="col-md-4">
+                                <label for="snow-search-rating">Rating</label>
+                                <input type='text' class="form-control" readonly id='snow-search-rating' value="" />
+                                <label for="snow-search-location">Location</label>
+                                <input type='text' class="form-control" readonly id='snow-search-location' value="" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="snow-search-visibility">Visibility</label>
+                                <input type='text' class="form-control" readonly id='snow-search-visibility' value="" />
+                                <label for="snow-search-temperature">Temperature</label>
+                                <input type='text' class="form-control" readonly id='snow-search-temperature' value="" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="snow-search-attachment">Attachment</label>
+                                <input type='text' class="form-control" readonly id='snow-search-attachment' value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4>Get surf report by poster and date</h4>
+                        <div class="col-md-4">
+                            <input type='text' class="form-control" id='surf-date-search' value="" />
+                        </div>
+                        <div class="col-md-4">
+                            <input type='text' class="form-control" id='surf-name-search' value="" />
+                        </div>
+                        <div class="col-md-2">
+                            <button id="surf-search" type="button" class="btn btn-secondary">Search</button>
+                        </div>
+                        <div id="surf-search-output" class="col-md-12">
+                            <div class="col-md-4">
+                                <label for="surf-search-rating">Rating</label>
+                                <input type='text' class="form-control" readonly id='surf-search-rating' value="" />
+                                <label for="surf-search-location">Location</label>
+                                <input type='text' class="form-control" readonly id='surf-search-location' value="" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="surf-search-wave-size">Wave Size</label>
+                                <input type='text' class="form-control" readonly id='surf-search-wave-size' value="" />
+                                <label for="surf-search-period">Period</label>
+                                <input type='text' class="form-control" readonly id='surf-search-period' value="" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="surf-search-attachment">Attachments</label>
+                                <input type='text' class="form-control" readonly id='surf-search-attachment' value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--endregion get single report-->
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../vendor/sidebar-menu.js"></script>
+    <script src="../js/reports.js"></script>
+    <script src="../vendor/jquery-simple-datetimepicker-1.12.0/jquery.simple-dtpicker.js"></script>
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#snow-date').appendDtpicker({
+                "autodateOnStart": true
+            });
+            $('#surf-date').appendDtpicker({
+                "autodateOnStart": true
+            });
+            $('#snow-date-search').appendDtpicker({
+                "autodateOnStart": true
+            });
+            $('#surf-date-search').appendDtpicker({
+                "autodateOnStart": true
+            });
+
+        });
+    </script>
+</body>
+</html>

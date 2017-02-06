@@ -137,6 +137,11 @@ namespace SnurfReportService
             return new Tuple<DateTime, string>(report.Date, report.Poster).GetHashCode();
 
         }
+        private static long BuildReportKey(DateTime date, string poster)
+        {
+            return new Tuple<DateTime, string>(date, poster).GetHashCode();
+
+        }
 
         #region workarounds for RPC not supporting generics
 
@@ -168,6 +173,18 @@ namespace SnurfReportService
         public Task<SurfReport> SaveSurfReport(SurfReport report)
         {
             return this.SaveReport<SurfReport>(report);
+        }
+
+        public async Task<IEnumerable<SurfReport>> GetDailySurfReportByKey(DateTime day, string poster)
+        {
+            var report = await this.GetReport<SurfReport>(BuildReportKey(day, poster));
+            return new List<SurfReport>() { report };
+        }
+
+        public async Task<IEnumerable<SnowReport>> GetDailySnowReportByKey(DateTime day, string poster)
+        {
+            var report = await this.GetReport<SnowReport>(BuildReportKey(day, poster));
+            return new List<SnowReport>() { report };
         }
 
         #endregion

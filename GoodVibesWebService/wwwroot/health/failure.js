@@ -21,7 +21,7 @@ function TurnOffSnowService() {
         processData: false,
         data: JSON.stringify({ "TurnServiceOn": false })
     })
-   .success(function (response) {
+   .done(function (response) {
 
    });
 }
@@ -29,11 +29,10 @@ function TurnOffSnowService() {
 function GetSnowConditionsServiceStatus() {
     $.ajax({
         url: serviceUrl + '/api/snowservice',
-        dataType: 'json',
         method: 'GET'
     })
    .done(function (response) {
-       alert(response.toString());
+       $('#serviceHealth').val(response)
    });
 }
 function GetSnowConditions() {
