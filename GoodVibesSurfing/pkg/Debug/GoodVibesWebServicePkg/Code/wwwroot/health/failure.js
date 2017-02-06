@@ -37,6 +37,7 @@ function GetSnowConditionsServiceStatus() {
 }
 function GetSnowConditions() {
     $("#waitingForResponse").fadeIn();
+    $("#responseFailed").fadeOut();
     $.ajax({
         url: serviceUrl + '/api/snowconditions',
         dataType: 'json',

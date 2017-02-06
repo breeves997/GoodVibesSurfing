@@ -18,17 +18,21 @@ $(document).ready(function () {
     $('#create-surf-report').click(function(e) {
         if (surfFormVisible) {
             $('#surf-report').slideUp();
+            surfFormVisible = false
         }
         else {
             $('#surf-report').slideDown();
+            surfFormVisible = true
         }
     });
     $('#create-snow-report').click(function(e) {
         if (snowFormVisible) {
-            $('#snow-report').fadeOut();
+            $('#snow-report').slideUp();
+            snowFormVisible = false
         }
         else {
-            $('#snow-report').fadeIn();
+            $('#snow-report').slideDown();
+            snowFormVisible = true
         }
     });
     $('#snow-submit').click(function(e) {

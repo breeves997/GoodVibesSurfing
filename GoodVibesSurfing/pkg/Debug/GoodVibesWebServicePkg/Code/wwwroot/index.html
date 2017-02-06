@@ -68,11 +68,20 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
+                <div class="jumbotron">
+                    <h1>Welcome to GoodVibesSurfing</h1>
+                    <p>The GoodVibesSurfing solution is a sample microsoft service fabric project built for no reason other than to play around. Use it to explore microservice
+                    architecture, cloud development patterns, hosted environments, and new shiny tools, all while being free to break things without consequence. See more
+                    at the <a href="https://github.com/breeves997/GoodVibesSurfing">github</a></p>
+                </div>
+            </div>
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1>Welcome to the GoodVibes Service Fabric Test App</h1>
+                        <h1>About the web app</h1>
                         <p>This application front end acts as a proxy to observe and trigger various events and responses in the hosted service fabric application.</p>
-                        <p>Be sure to include a description of the functionality and the location in the code on the front end so people can easily find samples.</p>
+                        <p>If you build or change things (which is the whole point!), be sure to include a description of the functionality and the location
+                         in the code on the back end so people can easily find samples and follow along.</p>
                         <h2>Happy Surfing!</h2>
                     </div>
                 </div>
@@ -102,29 +111,6 @@
                             <td id="snowpack"></td>
                         </tr>
                     </table>
-                </div>
-                <div class="row">
-                    <div class="well">
-                        <p>The buttons below manipulate and report on the state of the stateful SnowConditions service itself. By hitting "turn service off",
-                        we simulate a timeout in the service (executed by the SnowServiceController). The controller method GET on the SnowConditionsController 
-                        has a retry pattern injected into in, and so will attempt to retry the GET snowconditions call several times before finally calling it
-                        quits (the operation will only retry on transient failures such as timeouts)</p>
-                        <br />
-                        <p>The retry pattern itself can be found in the $/CloudUtilities/FaultTolerance/BasicRetryPattern. The code should be straightforward, but it
-                        accepts a Func as an argument, and executes the delegate within a separate async task</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="btn btn-lg">
-                            <a id="turnOffSnowService" href="#">Turn Service Off</a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="btn btn-lg">
-                            <a id="getSnowServiceStatus" href="#">Get service status</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
