@@ -1,0 +1,15 @@
+﻿This is the validation service yo!
+
+The validation service needs references to all the data contracts used by other aspects of the application. These contracts should exist in the interface projects,
+which means that there shouldn't be a problem referencing the projects directly. I am of the opinion that this is a perfectly reasonable design decision, even considering 
+a M/SOA pattern. 
+
+The pattern I'm thinking of is to register the contracts in a stateful service where the key is the typeof(contract) and the value is a collection of Func<TContract> which can 
+be run against a concrete implementation of the given type. Should work beautifully. I like the FluentValidation library since it has great support for registering lambda expressions.
+I want to be able to register new rules without redeploying the application, so it might be hard to map the concrete instance of AbstractValidatorFor<T> without using some heavy reflection.
+That said, updating validation rules doesn't happen too often so that seems like a perfectly reasonable thing to do. We'll see how complicated this gets. 
+
+NOTE: There is a valid concern with changing and versioned data contracts, and in that respect you may want to decouple the validation service from the concrete implementations of 
+the services. As we will discuss below, an alternative would be to use the stateful service to persist versioned validation rules against versioned data contracts. Each contract implementation
+could exist in a reliable dictionary with a corresponding collection of versioned validation rules. I may still do this. For now, I don't want to go through that effort for a test application.
+But, we should design this component with the knowledge that we MAY want to go down that route, and so we need to remain flexible to change

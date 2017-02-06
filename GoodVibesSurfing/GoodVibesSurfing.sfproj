@@ -30,6 +30,7 @@
     <ProjectReference Include="..\GoodVibesWebService\GoodVibesWebService.xproj" />
     <ProjectReference Include="..\SnurfReportService\SnurfReportService.csproj" />
     <ProjectReference Include="..\ValetAccessManager\ValetAccessManager.csproj" />
+    <ProjectReference Include="..\ValidationService\ValidationService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

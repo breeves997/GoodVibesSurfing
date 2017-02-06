@@ -23,9 +23,11 @@ namespace SnurfReportService
 
         //---------------reliable collections in this service--------------------------------
         //reports filed day-by-day where the value is the hash code of the actual report location in the reliable collection. The hashed key is the Poster+PostTime
+        //This exists mostly for easy access and searching.
         //var dailySurfReports = await this.StateManager.GetOrAddAsync<IReliableDictionary<DateTime, List<long>>>("DailySurfReports");
         //var dailySnowReports = await this.StateManager.GetOrAddAsync<IReliableDictionary<DateTime, List<long>>>("DailySnowReports");
 
+        //This is the defacto report collections. 
         //var surfReports = await this.StateManager.GetOrAddAsync<IReliableDictionary<long, SurfReport>>("SurfReports");
         //var snowReports = await this.StateManager.GetOrAddAsync<IReliableDictionary<long, SnowReport>>("SnowReports");
         //---------------reliable collections in this service--------------------------------
@@ -78,6 +80,7 @@ namespace SnurfReportService
             {
                 //get a list of the report keys for the day
                 var reportIdsConditional = await dailyreports.TryGetValueAsync(tx, day);
+                //Send back a count of 0, indicating nothing was retrieved (duh)
                 if (!reportIdsConditional.HasValue) return rtn;
                 var reportIds = reportIdsConditional.Value;
 
@@ -109,17 +112,25 @@ namespace SnurfReportService
         }
         public async Task<T> SaveReport<T>(T report) where T : ReportBase
         {
+            //Get the dictionaries of the daily reports and the individual reports
             var reports = await this.StateManager.GetOrAddAsync<IReliableDictionary<long, T>>(CollectionNames.GetReportDictionaryName<T>());
             var dailies = await this.StateManager.GetOrAddAsync<IReliableDictionary<DateTime, List<long>>>(CollectionNames.GetDailyReportDictionaryName<T>());
+            //The key is the hash of the date and poster
             var key = BuildReportKey(report);
             using (var tx = this.StateManager.CreateTransaction())
             {
+                //The behaviour expected is that if the report already exists we return null
+                var exists = await reports.ContainsKeyAsync(tx, key);
+                if (exists) return null; //should return more info
+                //The report does not exist yet. First, add it to the collection of daily reports. The update function is to append the new id to the list of ids. The update
+                //function will usually run, since we usually already have a list of ids for each date
                 await dailies.AddOrUpdateAsync(tx, report.Date, new List<long>() { BuildReportKey(report) },
                     (k, v) =>
                     {
                         v.Add(BuildReportKey(report));
                         return v;
                     });
+                //Now that we've added the mapped id to the daily reports, let's add the actual report to the de-facto collection
                 var success = await reports.AddOrUpdateAsync(tx, key, report, (k, v) => report);
                 await tx.CommitAsync();
                 return success;
@@ -143,7 +154,7 @@ namespace SnurfReportService
 
         }
 
-        #region workarounds for RPC not supporting generics
+        #region workarounds for RPC not supporting generics or overloaded methods
 
         public Task<IEnumerable<SnowReport>> GetDailySnowReports(DateTime day)
         {

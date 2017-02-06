@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnurfReportService", "Snurf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnurfReportService.Interfaces", "SnurfReportService.Interfaces\SnurfReportService.Interfaces.csproj", "{0BE68BF6-7DA5-4122-A665-61B9E7513FB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationService", "ValidationService\ValidationService.csproj", "{A627BA7F-9C15-4F89-9963-83B32FD6C200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,12 @@ Global
 		{0BE68BF6-7DA5-4122-A665-61B9E7513FB6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BE68BF6-7DA5-4122-A665-61B9E7513FB6}.Release|x64.ActiveCfg = Release|Any CPU
 		{0BE68BF6-7DA5-4122-A665-61B9E7513FB6}.Release|x64.Build.0 = Release|Any CPU
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Debug|x64.ActiveCfg = Debug|x64
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Debug|x64.Build.0 = Debug|x64
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Release|Any CPU.ActiveCfg = Release|x64
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Release|x64.ActiveCfg = Release|x64
+		{A627BA7F-9C15-4F89-9963-83B32FD6C200}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
