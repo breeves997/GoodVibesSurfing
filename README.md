@@ -12,7 +12,10 @@ An ASP .NET Core web front end is exposed as a means to interact with and test t
  
 ### Todos
 
- - Write test framework + tests
- - Create some data stores (SQL, NoSQL, Blob)
+ - Write test framework + tests. Use the [Service Fabric Mocks!](https://github.com/loekd/ServiceFabric.Mocks)
+ - Figure out why the blob SAS key generated from the ValetAccessManager is getting auth failures from azure
+ - Create a front end framework. Preference to Angular2, but others considered
+ - Create a validation service engine
+ - Create some data stores (SQL, NoSQL)
  - Deploy live version
  - Write more code!
