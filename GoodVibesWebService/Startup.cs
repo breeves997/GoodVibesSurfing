@@ -35,7 +35,14 @@ namespace GoodVibesWebService
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            }); 
+
+            //this is the ASP.NET default DI framework. Allows you to inject implementations of interfaces (or concrete classes) into the constructor 
+            // of your service, so long as ASP.NET is the one handling the instantiation of those services. I'm just using transient scoped classes for everything,
+            //but you can inject objects with many different lifecycle options
             services.AddTransient<IRetryStrategy, BasicRetryPattern>();
             services.AddTransient<ISurfReportsService>(ctx =>
             {

@@ -8,18 +8,21 @@ namespace GoodVibesWebService.ClientContracts
 {
     public class SurfReportContract : BaseReportContract
     {
+        public SurfReportContract() { }
         public  double WaveSize { get; set; }
         public  int Period {get; set;}
 
     }
     public class SnowReportContract : BaseReportContract
     {
+        public SnowReportContract() { }
         public int Temperature { get; set; }
         public string Visibility { get; set; }
 
     }
     public abstract class BaseReportContract
     {
+        public BaseReportContract() { }
         public Ratings Rating { get; set; }
         public string Poster { get; set; }
         public IEnumerable<Uri> Attachments  { get; set; }

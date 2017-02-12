@@ -82,6 +82,7 @@ namespace ValetAccessManager.Controllers
 
                 Trace.WriteLine(string.Format("Blob Uri: {0} - Shared Access Signature: {1}", blobSas.BlobUri, blobSas.Credentials));
 
+                //the continue when all call here is a little silly but I'm not great at async in C#
                 var retrieved = Task.Factory.ContinueWhenAll<StorageEntitySas>(getSas, completedTask => { return sas; });
 
                 return await retrieved;
@@ -101,7 +102,7 @@ namespace ValetAccessManager.Controllers
         {
             var blobClient = this.account.CreateCloudBlobClient();
             // here we need to enable CORS on the blob client. So, lets set up the Cors props! If you don't know what CORS is, 
-            //you'll need to google that
+            //you'll need to google that. This is unecessary to do with every service call, but I'm too lazy to change it now
             ServiceProperties blobServiceProperties = blobClient.GetServiceProperties();
  
             //Create a new CORS properties configuration
@@ -119,6 +120,7 @@ namespace ValetAccessManager.Controllers
             blobClient.SetServiceProperties(blobServiceProperties);
             var container = blobClient.GetContainerReference(this.blobContainer);
 
+            //Reserve a section of the blob which we'll let the user upload to
             var blob = container.GetBlockBlobReference(blobName);
             
             if (blob.Exists())
@@ -130,7 +132,7 @@ namespace ValetAccessManager.Controllers
             {
                 Permissions = SharedAccessBlobPermissions.Read,
 
-                // Create a signature for 5 min earlier to leave room for clock skew
+                // Create a signature for 5 min earlier to leave room for clock skew as per google recommendations
                 SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-5),
 
                 // Create the signature for as long as necessary -  we can 

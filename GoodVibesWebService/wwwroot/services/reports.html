@@ -170,6 +170,24 @@
                 <hr />
                 <!--Region Submit reports-->
                 <div class="row container-fluid">
+                    <div class="well">
+                        The buttons below allow the user to submit a report (duh) to the SnurfReportService. As you've probably figured out by now, the request is first routed through
+                        the exposed Web API. Since the data types used in the IReliableCollections saved by the stateful service are immutable and instantiated via constructor arguments,
+                        we expose a client contract for the web api to interact with, found in $/GoodVibesWebService/ClientContracts. These need to have public getters/setters and a 
+                        public parameterless constructor in order for the default MVC behaviour to construct the type from the json request. Once we have the request object, things 
+                        get fun.
+                        <hr />
+                        The web front end also is injected with a dependency to the stateful $/ValidationService, through the $/ValidationService.Interfaces proxy (see Starup.cs in the web project).
+                        The validation service contains a IReliableDictionary of validation expressions keyed against types. More info is available in the about.txt file in the 
+                        validation service itself, since explaining it all here clutters the page. In short we serialize expression trees into xml to persist validation rules to the stateful service. We can then construct validators
+                        by compiling the deserialized expression trees and adding the resultant delegates (which return validation messages) to an instance validator class.
+                        This has the advantage of being able to add, update, or remove validation rules dynamically for a given type. Following validation,
+                        the submitted report is converted to the immutable domain entity type and sent off to the stateful $/SnurfReportService to be persisted to memory.
+                    </div>
+                    <div class="well">
+                        <strong>TODOs</strong><p>Fix the responses coming back from the web server to be more client friendly, add validation notifications on failed validation, clear the form
+                        input and notify the user when a report is saved succesfully, ensure the GetReports endpoint always runs and updates the page after saving a new report</p>
+                    </div>
                     <div class="row container-fluid">
                         <button id="create-snow-report" class="btn btn-lg" type="button">Post a snow report</button>
 

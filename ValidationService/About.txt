@@ -4,12 +4,29 @@ The validation service needs references to all the data contracts used by other 
 which means that there shouldn't be a problem referencing the projects directly. I am of the opinion that this is a perfectly reasonable design decision, even considering 
 a M/SOA pattern. 
 
-The pattern I'm thinking of is to register the contracts in a stateful service where the key is the typeof(contract) and the value is a collection of Func<TContract> which can 
-be run against a concrete implementation of the given type. Should work beautifully. I like the FluentValidation library since it has great support for registering lambda expressions.
-I want to be able to register new rules without redeploying the application, so it might be hard to map the concrete instance of AbstractValidatorFor<T> without using some heavy reflection.
-That said, updating validation rules doesn't happen too often so that seems like a perfectly reasonable thing to do. We'll see how complicated this gets. 
+The pattern I'm trying to achieve in this service is that each given type has a collection of validation rules which can be expressed by compiled expressions of the 
+type Expression<Func<T, ValidationMessage>>. That is, the expression trees will take an entity and return validation messages. The sticking point is that since expression
+trees are data structures, they can be serialized into xml and then saved off to an IReliableCollection (remember - everyting in an IREliableCollection must be serializable since
+it's persisted to disk). The reason for this approach is that it allows you to create new validation expressions on the fly and save their representation to the stateful service. 
+It should also allow chaining of validation logic on base types and decorators. 
+
+The validation expressions are serialized using the project ExpressionSerializtion, which was pulled off CodePlex originally for quickly serializing expression trees for IQueryable and
+Linq to SQL applications. Fortunately, it seems to work pretty well out of the box for any Expression<TDelegate> type so long as you construct the serializer with type information
+of all the various types it needs to work with. It has to pull a lot of reflected info from the types in order to activate all the types it uses, and that code is found in the Serialize.cs
+file in this project.
+
+The actual classes responsible for running the validation inherit or are constructed from the GoodVibesValidator<T> class, which is just a base class with a static factory method
+which takes in a list of expressions and saves the compiled delegates to an internal collection. When you validate, each delegate is run on the entity to validate. Since we are using
+expression trees for validation, you are limited in what you can do to the bounds of what expressions can do. 
+
+Another note is that I am trying to get some sort of ComparableType class which properly implements IEquatable and IComparable to be used as the TKey for the validation dictionary. Basically 
+implement some sort of explicit or implicit semver which dictates if a given type is valid to be used with a given set of validation rules. But, I couldn't get it to work and so just used
+the assembly qualified type name as the key for a given dictionary. 
 
 NOTE: There is a valid concern with changing and versioned data contracts, and in that respect you may want to decouple the validation service from the concrete implementations of 
-the services. As we will discuss below, an alternative would be to use the stateful service to persist versioned validation rules against versioned data contracts. Each contract implementation
+the services. An alternative would be to use the stateful service to persist versioned validation rules against versioned data contracts. Each contract implementation
 could exist in a reliable dictionary with a corresponding collection of versioned validation rules. I may still do this. For now, I don't want to go through that effort for a test application.
 But, we should design this component with the knowledge that we MAY want to go down that route, and so we need to remain flexible to change
+
+I was also thinking of doing something crazy like compiling C# code on the fly and 
+saving it to a bin folder somewhere, and having another reliable collection which basically just points to the file location of the compiled binary, but that is a future me project. 

@@ -1126,7 +1126,7 @@
           "lib/net45/Microsoft.Owin.Cors.dll": {}
         }
       },
-      "Microsoft.ServiceFabric/5.3.311": {
+      "Microsoft.ServiceFabric/5.4.164": {
         "type": "package",
         "compile": {
           "lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll": {},
@@ -1141,10 +1141,10 @@
           "lib/net45/System.Fabric.dll": {}
         }
       },
-      "Microsoft.ServiceFabric.Data/2.3.311": {
+      "Microsoft.ServiceFabric.Data/2.4.164": {
         "type": "package",
         "dependencies": {
-          "Microsoft.ServiceFabric": "[5.3.311]"
+          "Microsoft.ServiceFabric": "[5.4.164]"
         },
         "frameworkAssemblies": [
           "System.Runtime.Serialization"
@@ -1158,11 +1158,11 @@
           "lib/net45/Microsoft.ServiceFabric.Data.dll": {}
         }
       },
-      "Microsoft.ServiceFabric.Services/2.3.311": {
+      "Microsoft.ServiceFabric.Services/2.4.164": {
         "type": "package",
         "dependencies": {
-          "Microsoft.ServiceFabric": "[5.3.311]",
-          "Microsoft.ServiceFabric.Data": "[2.3.311]"
+          "Microsoft.ServiceFabric": "[5.4.164]",
+          "Microsoft.ServiceFabric.Data": "[2.4.164]"
         },
         "compile": {
           "lib/net45/Microsoft.ServiceFabric.Services.dll": {},
@@ -2718,12 +2718,12 @@
         "lib/net45/Microsoft.Owin.Cors.dll"
       ]
     },
-    "Microsoft.ServiceFabric/5.3.311": {
-      "sha512": "C9BguBr2ITYOPzZEdTdC34wSWtM8KL2zXTpnUeiGxlLDtnBHV9uaaDiiVXZTOqCdjMRmo7SH8dDKA75OACbWjw==",
+    "Microsoft.ServiceFabric/5.4.164": {
+      "sha512": "tj8rj5mgFLEgheHoKF4wAwG+y9RZZkX7XP70lDrvniwXJqZd5FnOtYs0FyKUL9qAhZNwNZYJGKegmT0eh1NyGQ==",
       "type": "package",
-      "path": "Microsoft.ServiceFabric/5.3.311",
+      "path": "Microsoft.ServiceFabric/5.4.164",
       "files": [
-        "Microsoft.ServiceFabric.5.3.311.nupkg.sha512",
+        "Microsoft.ServiceFabric.5.4.164.nupkg.sha512",
         "Microsoft.ServiceFabric.nuspec",
         "lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll",
         "lib/net45/Microsoft.ServiceFabric.Internal.dll",
@@ -2732,12 +2732,12 @@
         "lib/net45/System.Fabric.xml"
       ]
     },
-    "Microsoft.ServiceFabric.Data/2.3.311": {
-      "sha512": "EQZgwKnTZ0KGMm58kK/itga/IM2lydwNObn+raDYBQ4uTH0j3lZjHNI+tuCVLp6PM35WL9Nj7KBddJGGA/4KWw==",
+    "Microsoft.ServiceFabric.Data/2.4.164": {
+      "sha512": "tePPwdBUP3tVR6zKxeWbz+3W3AEgLKv/ZOKDefQuPiq/WaY4dq2kWEF6d1N1SE7TVnMdxK/mSLIueQkCyqzcVA==",
       "type": "package",
-      "path": "Microsoft.ServiceFabric.Data/2.3.311",
+      "path": "Microsoft.ServiceFabric.Data/2.4.164",
       "files": [
-        "Microsoft.ServiceFabric.Data.2.3.311.nupkg.sha512",
+        "Microsoft.ServiceFabric.Data.2.4.164.nupkg.sha512",
         "Microsoft.ServiceFabric.Data.nuspec",
         "lib/net45/Microsoft.ServiceFabric.Data.Interfaces.dll",
         "lib/net45/Microsoft.ServiceFabric.Data.Interfaces.xml",
@@ -2745,12 +2745,12 @@
         "lib/net45/Microsoft.ServiceFabric.Data.xml"
       ]
     },
-    "Microsoft.ServiceFabric.Services/2.3.311": {
-      "sha512": "6mhqCknXPJlJFu0WhII9kh4BPA28FFzdQXwSXwocgsNKIUF/sdlGNCm64zYK6rY4X4KRs9XHqbmsGB1P9dpIHA==",
+    "Microsoft.ServiceFabric.Services/2.4.164": {
+      "sha512": "nwmO9kIYEDguExQaiJYAc5QMGzBnd8sAWaFocwEWMRF/y48ljnyICCeWyuc6tNQZTNkwMi9EtQ50cl3fENaqqw==",
       "type": "package",
-      "path": "Microsoft.ServiceFabric.Services/2.3.311",
+      "path": "Microsoft.ServiceFabric.Services/2.4.164",
       "files": [
-        "Microsoft.ServiceFabric.Services.2.3.311.nupkg.sha512",
+        "Microsoft.ServiceFabric.Services.2.4.164.nupkg.sha512",
         "Microsoft.ServiceFabric.Services.nuspec",
         "lib/net45/Microsoft.ServiceFabric.Services.dll",
         "lib/net45/Microsoft.ServiceFabric.Services.xml",
@@ -5240,9 +5240,9 @@
       "Microsoft.Extensions.Logging.Debug >= 1.1.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.1.0",
       "Microsoft.Owin.Cors >= 3.0.1",
-      "Microsoft.ServiceFabric >= 5.3.311",
-      "Microsoft.ServiceFabric.Data >= 2.3.311",
-      "Microsoft.ServiceFabric.Services >= 2.3.311",
+      "Microsoft.ServiceFabric >= 5.4.164",
+      "Microsoft.ServiceFabric.Data >= 2.4.164",
+      "Microsoft.ServiceFabric.Services >= 2.4.164",
       "Newtonsoft.Json >= 9.0.1",
       "System.Collections.Immutable >= 1.3.1"
     ],

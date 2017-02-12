@@ -47,7 +47,7 @@ namespace GoodVibesWebService.Controllers
                 return await UserReportsSvc.GetDailySnowReportByKey(date.Date, poster);
         }
         [HttpPost]
-        public async Task<SnowReport> Post(SnowReportContract clientReport)
+        public async Task<SnowReport> Post([FromBody] SnowReportContract clientReport)
         {
             var report = clientReport.ToDomain();
             ValidationResult vld = await ValidatorSvc.ValidateSnowReport(report);
