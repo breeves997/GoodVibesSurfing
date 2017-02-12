@@ -10,12 +10,16 @@ An ASP .NET Core web front end is exposed as a means to interact with and test t
  - [DotNet Core](https://www.asp.net/core)
  - [Service Fabric](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-get-started)
  
-### Todos
 
+## Todos
+
+### Code
  - Write test framework + tests. Use the [Service Fabric Mocks!](https://github.com/loekd/ServiceFabric.Mocks)
  - Figure out why the blob SAS key generated from the ValetAccessManager is getting auth failures from azure
  - Create a front end framework. Preference to Angular2, but others considered
- - Create a validation service engine
- - Create some data stores (SQL, NoSQL)
- - Deploy live version
- - Write more code!
+ - Create sample Actors project
+ 
+### DevOps
+ - Create some external data stores (SQL, NoSQL) to interact with
+ - Deploy live version to fabric party clusters
+ - Get stateful service replicas up and running
