@@ -27,7 +27,7 @@ namespace ValidationService
 			var resolver = new TypeResolver(assemblies, new Type[] 
 			{ 
 				typeof(ValidationRules), typeof(ComparableType), typeof(ValidationMessage), typeof(ReportBase), typeof(SurfReport),
-                typeof(SnowReport), typeof(Ratings), typeof(Ratings) //yeah, so adding a nullable operator to a custom enum has the compiler inline a new type for you, which isn't accessible conventionally from the compile time known types and assemblies. fun fact!
+                typeof(SnowReport), typeof(Ratings)//note: adding a nullable operator to a custom enum has the compiler inline a new type for you (I think), which doesn't seem to be accessible conventionally from the compile time known types and assemblies. fun fact!
 			});
 			//var creator = new QueryCreator();
 			//CustomExpressionXmlConverter queryconverter = new QueryExpressionXmlConverter(creator: null, resolver: resolver);

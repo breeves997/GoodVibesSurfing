@@ -20,17 +20,29 @@ namespace ValidationService
     //    }
     //}
 
-    public abstract class GoodVibesValidator<T> : IGoodVibesValidatorFor<T>
+    public class GoodVibesValidator<T> : IGoodVibesValidatorFor<T>
     {
+        public static GoodVibesValidator<T> Create(List<Expression<Func<T, ValidationMessage>>> validationRules)
+        {
+            var instance = new GoodVibesValidator<T>(validationRules);
+            return instance;
+
+        }
         protected GoodVibesValidator()
         {
             ValidatorExpressions = new List<Expression<Func<T, ValidationMessage>>>();
+        }
+        protected GoodVibesValidator(List<Expression<Func<T, ValidationMessage>>> rules)
+        {
+            ValidatorExpressions = rules;
+            Validators = rules.Select(x => x.Compile()).ToList();
         }
         protected List<Expression<Func<T, ValidationMessage>>> ValidatorExpressions { get; set; }
         protected List<Func<T, ValidationMessage>> Validators { get; set; }
         public void AddRule(Expression<Func<T, ValidationMessage>> rule)
         {
             this.ValidatorExpressions.Add(rule);
+            this.Validators.Add(rule.Compile());
         }
         public ValidationResult Validate(T item)
         {

@@ -40,5 +40,16 @@ namespace ValidationService.Contracts
         public List<ValidationMessage> ValidationMessages { get; set; }
         public int ErrorCount { get { return this.ValidationMessages.Where(x => x.Success == false).Count(); } }
         public bool Success { get { return this.ErrorCount == 0; } }
+        public void AddValidationResults(IEnumerable<ValidationResult> results)
+        {
+            foreach (var result in results)
+            {
+                this.ValidationMessages.AddRange(result.ValidationMessages);
+            }
+        }
+        public void AddValidationResults(ValidationResult result)
+        {
+            this.ValidationMessages.AddRange(result.ValidationMessages);
+        }
     }
 }

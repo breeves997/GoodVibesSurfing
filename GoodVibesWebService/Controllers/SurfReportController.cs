@@ -13,6 +13,7 @@ using System.Text;
 using ValidationService.Interfaces;
 using ValidationService.Contracts;
 using Newtonsoft.Json;
+using GoodVibesWebService.ClientContracts;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -58,9 +59,10 @@ namespace GoodVibesWebService.Controllers
                 return await UserReportsSvc.GetDailySurfReportByKey(date.Date, poster);
         }
         [HttpPost]
-        public async Task<SurfReport> Post([FromBody] SurfReport report)
+        public async Task<SurfReport> Post([FromBody] SurfReportContract clientReport)
         {
-            ValidationResult vld = await ValidatorSvc.ValidateSnurfReport(report);
+            var report = clientReport.ToDomain();
+            ValidationResult vld = await ValidatorSvc.ValidateSurfReport(report);
             if (!vld.Success)
             {
                 Response.StatusCode = 400;
@@ -88,7 +90,7 @@ namespace GoodVibesWebService.Controllers
 
         }
         [HttpPut]
-        public async Task<SurfReport> Put([FromBody] SurfReport report)
+        public async Task<SurfReport> Put([FromBody] SurfReportContract report)
         {
             return await Post(report);
         }

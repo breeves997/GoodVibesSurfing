@@ -11,19 +11,12 @@ using ValidationService.Contracts;
 namespace ValidationService.Validators
 {
 
-    class ReportValidator : GoodVibesValidator<ReportBase>
+    public class ReportValidator : GoodVibesValidator<ReportBase>
     {
         public ReportValidator() : base()
         {
-            Expression<Func<ReportBase, ValidationMessage>> ratingNotNull = x => new ValidationMessage()
-            {
-                Success = x.Rating != Ratings.None,
-                Name = "Rating populated",
-                ErrorMessage = (x.Rating != Ratings.None) ? "" : "A rating must be entered"
-                
-            } ;
-            AddRule(ratingNotNull);
         }
+
 
         //private Expression<Func<ReportBase, ValidationMessage>> FieldsNotNull(ReportBase report)
         //{

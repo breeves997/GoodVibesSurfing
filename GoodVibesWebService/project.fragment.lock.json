@@ -104,7 +104,7 @@
       "type": "project",
       "framework": ".NETFramework,Version=v4.5.2",
       "compile": {
-        "bin/Debug/ValidationService.Interfaces.dll": {}
+        "bin/x64/Debug/ValidationService.Interfaces.dll": {}
       },
       "runtime": {
         "../packages/Microsoft.ServiceFabric.5.3.311/lib/net45/Microsoft.ServiceFabric.Internal.Strings.dll": {},
@@ -115,10 +115,10 @@
         "../packages/Microsoft.ServiceFabric.Data.2.3.311/lib/net45/Microsoft.ServiceFabric.Data.dll": {},
         "../packages/Microsoft.ServiceFabric.Services.2.3.311/lib/net45/Microsoft.ServiceFabric.Services.dll": {},
         "../packages/Microsoft.ServiceFabric.Services.2.3.311/lib/net45/ServiceFabricServiceModel.dll": {},
-        "bin/Debug/ValidationService.Interfaces.dll": {}
+        "bin/x64/Debug/ValidationService.Interfaces.dll": {}
       },
       "contentFiles": {
-        "bin/Debug/ValidationService.Interfaces.pdb": {
+        "bin/x64/Debug/ValidationService.Interfaces.pdb": {
           "buildAction": "None",
           "codeLanguage": "any",
           "copyToOutput": true

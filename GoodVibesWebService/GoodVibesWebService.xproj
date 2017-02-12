@@ -22,5 +22,8 @@
     <ProjectReference Include="..\ValetAccessManager.Interfaces\ValetAccessManager.Interfaces.csproj" />
     <ProjectReference Include="..\ValidationService.Interfaces\ValidationService.Interfaces.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <DnxInvisibleFolder Include="ClientContracts\SnurfReports\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\DotNet.Web\Microsoft.DotNet.Web.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

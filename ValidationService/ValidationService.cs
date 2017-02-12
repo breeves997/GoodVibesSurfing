@@ -15,6 +15,9 @@ using Microsoft.ServiceFabric.Data;
 using ExpressionSerialization;
 using System.Xml.Linq;
 using System.Linq.Expressions;
+using ValidationService.Seed;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using System.Diagnostics;
 
 namespace ValidationService
 {
@@ -42,22 +45,40 @@ namespace ValidationService
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return new ServiceReplicaListener[0];
+            return new List<ServiceReplicaListener>() {
+                new ServiceReplicaListener((context) =>
+               this.CreateServiceRemotingListener(context))
+            };
         }
 
         public async Task<ValidationResult> ValidateEntity<T>(T entity)
         {
-            ValidationResult rtn = null;
+            ValidationResult rtn = new ValidationResult();
             //var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<ComparableType, IGoodVibesValidator>>(ValidatorDictionary);
-            var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<ComparableType, List<XElement>>>(SerializedValidatorDictionary);
+            var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, List<XElement>>>(SerializedValidatorDictionary);
             using (var tx = this.StateManager.CreateTransaction())
             {
-                var conditionalValidator = await validators.TryGetValueAsync(tx, new ComparableType(typeof(T)));
-                if (conditionalValidator.HasValue)
-                {
-                     var validator = (IGoodVibesValidatorFor<T>)conditionalValidator.Value;
-                    rtn = validator.Validate(entity);
-                }
+                var conditionalValidatorRules = await validators.TryGetValueAsync(tx, typeof(T).AssemblyQualifiedName);
+                if (conditionalValidatorRules.HasValue)
+                    {
+                        foreach (var xml in conditionalValidatorRules.Value)
+                        {
+                            try
+                            {
+                                var x = _serializer.Deserialize<Func<T, ValidationMessage>>(xml);
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.TraceError(ex.ToString());
+                            }
+
+                        }
+                         var validationRules = conditionalValidatorRules.Value.Select(x => _serializer.Deserialize<Func<T, ValidationMessage>>(x)).ToList();
+                        var typeValidator = GoodVibesValidator<T>.Create(validationRules);
+                        var result = typeValidator.Validate(entity);
+                        rtn.AddValidationResults(result);
+                    }
+
             }
             return rtn;
         }
@@ -74,43 +95,42 @@ namespace ValidationService
             //This is essentially mapping types to objects. The IGoodVibesValidator just enforces that you use the interface for some semblance
             //of control. That said, you can quite eaisily break this if you are so inclined
             //var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<ComparableType, IGoodVibesValidator>>(ValidatorDictionary);
-            var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<int, List<XElement>>>(SerializedValidatorDictionary);
+            var validators = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, List<XElement>>>(SerializedValidatorDictionary);
             using (var tx = this.StateManager.CreateTransaction())
             {
                 if (await validators.GetCountAsync(tx) == 0)
                 {
-                    Expression<Func<ReportBase, ValidationMessage>> ratingNotNull = x => new ValidationMessage()
-                    {
-                        Success = x.Rating != Ratings.None,
-                        Name = "Rating populated",
-                        ErrorMessage = (x.Rating != Ratings.None) ? "" : "A rating must be entered"
-                        
-                    } ;
-                    XElement serializedValidator = _serializer.Serialize(ratingNotNull);
                     List<XElement> values = new List<XElement>();
-                    values.Add(serializedValidator);
+                    //Expression<Func<ReportBase, ValidationMessage>> expr1 = ReportValidationRules.RatingRule;
+                    //Expression<Func<ReportBase, ValidationMessage>> expr2 = ReportValidationRules.PosterRule;
+                    //Expression<Func<ReportBase, ValidationMessage>> expr3 = ReportValidationRules.LocationRule;
 
-                    await validators.AddAsync(tx, 1, values);
+                    //values.Add(_serializer.Serialize(expr1));
+                    //values.Add(_serializer.Serialize(expr2));
+                    //values.Add(_serializer.Serialize(expr3));
+
+                    ReportValidationRules.ReportRules.ForEach(x => values.Add(_serializer.Serialize(x)));
+                    await validators.AddAsync(tx, typeof(ReportBase).AssemblyQualifiedName, values);
                 }
                 await tx.CommitAsync();
             }
-            using (var tx = this.StateManager.CreateTransaction())
-            {
-                if (await validators.GetCountAsync(tx) != 0)
-                {
-                    var val = await validators.TryGetValueAsync(tx, 1);
-                    if (val.HasValue)
-                    {
-                        XElement x = val.Value.FirstOrDefault();
-                        var serializedValidator = _serializer.Deserialize<Func<ReportBase, ValidationMessage>>(x);
-                        var test = new SurfReport(Ratings.None, "ben", "dfs", DateTime.Now, null, 0, 0);
-                        var godIHopeThisJustFuckingWorksForOnce = serializedValidator.Compile()(test);
+            //using (var tx = this.StateManager.CreateTransaction())
+            //{
+            //    if (await validators.GetCountAsync(tx) != 0)
+            //    {
+            //        var val = await validators.TryGetValueAsync(tx, typeof(SurfReport).AssemblyQualifiedName);
+            //        if (val.HasValue)
+            //        {
+            //            XElement x = val.Value.FirstOrDefault();
+            //            var serializedValidator = _serializer.Deserialize<Func<ReportBase, ValidationMessage>>(x);
+            //            var test = new SurfReport(Ratings.None, "ben", "dfs", DateTime.Now, null, 0, 0);
+            //            var godIHopeThisJustFuckingWorksForOnce = serializedValidator.Compile()(test);
 
-                    }
+            //        }
 
-                }
+            //    }
 
-            }
+            //}
 
         }
 
@@ -121,12 +141,27 @@ namespace ValidationService
 
         public async Task<ValidationResult> ValidateSurfReport(SurfReport report)
         {
-            return await this.ValidateEntity<SurfReport>(report);
+            ValidationResult rtn = new ValidationResult();
+            //There may be a better way to do this, but the generic arguments required from the serialization library don't allow you to pass in a more derived type and get 
+            //return type covariance. Although I always seem to run into this problem in C#.... So, we need to manually validate against the known base types.
+            var baseResult = this.ValidateEntity<ReportBase>(report as ReportBase);
+            var coreResult = this.ValidateEntity<SurfReport>(report);
+            //These two tasks can be run in parallel. So do it.
+            await Task.WhenAll(baseResult, coreResult);
+            //I don't really know how to use a synchronous continue with call, so let's just force synchrocity this way
+            rtn.AddValidationResults(new ValidationResult[2] { baseResult.Result, coreResult.Result });
+            return rtn;
         }
 
         public async Task<ValidationResult> ValidateSnowReport(SnowReport report)
         {
-            return await this.ValidateEntity<SnowReport>(report);
+            //see comments above
+            ValidationResult rtn = new ValidationResult();
+            var baseResult = this.ValidateEntity<ReportBase>(report as ReportBase);
+            var coreResult = this.ValidateEntity<SnowReport>(report);
+            await Task.WhenAll(baseResult, coreResult);
+            rtn.AddValidationResults(new ValidationResult[2] { baseResult.Result, coreResult.Result });
+            return rtn;
         }
     }
 }

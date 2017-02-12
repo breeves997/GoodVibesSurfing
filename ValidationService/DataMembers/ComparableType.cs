@@ -15,14 +15,16 @@ namespace ValidationService
     [DataContract]
     public class ComparableType : IEquatable<ComparableType>, IComparable<ComparableType>
     {
-        private readonly Type Type;
         [DataMember]
         public string TypeName { get; set; }
+        [DataMember]
+        public Dictionary<string, string> Properties { get; set; }
+
 
         public ComparableType(Type type)
         {
-            Type = type;
-            TypeName = Type.AssemblyQualifiedName;
+            TypeName = type.AssemblyQualifiedName;
+            this.Properties = Type.GetType(TypeName).GetProperties().ToDictionary(x => x.Name, x => x.GetType().FullName);
         }
 
         public int CompareTo(ComparableType other)
@@ -33,22 +35,27 @@ namespace ValidationService
 
         public bool Equals(ComparableType other)
         {
-            var thisProps = Type.GetProperties();
-            var thatProps = other.Type.GetProperties();
-            if (thisProps.Count() != thatProps.Count()) return false;
-            if (Type.Name != other.Type.Name) return false;
-            if (Type.Namespace != other.Type.Namespace) return false;
-            if (!CheckMatchingProps(thisProps, thatProps)) return false;
+            if (this.TypeName != other.TypeName) return false;
+            if (!CompareX(this.Properties, other.Properties)) return false;
             return true;
         }
 
-        private bool CheckMatchingProps(PropertyInfo[] current, PropertyInfo[] other)
+        public bool CompareX<TKey, TValue>(
+            Dictionary<TKey, TValue> dict1, Dictionary<TKey, TValue> dict2)
         {
-            var currentList =current.ToList();
-            var otherList = other.ToList();
+            if (dict1 == dict2) return true;
+            if ((dict1 == null) || (dict2 == null)) return false;
+            if (dict1.Count != dict2.Count) return false;
 
-            var samesies = currentList.Zip(otherList, (x, y) => x.Name == y.Name && x.PropertyType == y.PropertyType && x.Attributes == y.Attributes);
-            return samesies.All(x => x == true);
+            var valueComparer = EqualityComparer<TValue>.Default;
+
+            foreach (var kvp in dict1)
+            {
+                TValue value2;
+                if (!dict2.TryGetValue(kvp.Key, out value2)) return false;
+                if (!valueComparer.Equals(kvp.Value, value2)) return false;
+            }
+            return true;
         }
     }
 }
