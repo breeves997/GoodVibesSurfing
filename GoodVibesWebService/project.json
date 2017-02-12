@@ -36,6 +36,9 @@
         },
         "ValetAccessManager.Interfaces": {
           "target": "project"
+        },
+        "ValidationService.Interfaces": {
+          "target": "project"
         }
       }
     }

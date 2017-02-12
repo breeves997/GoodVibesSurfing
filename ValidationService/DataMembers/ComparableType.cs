@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace ValidationService
 {
@@ -11,13 +12,17 @@ namespace ValidationService
     /// This isn't perfect. It is only good enough for my current, limited needs. It would take a decent amount of work to make this resilient.
     /// To do this right, I would want to annotate all my contracts with semver metadata to create a forward/backward compatibility resolver. But, eff that yo!
     /// </summary>
+    [DataContract]
     public class ComparableType : IEquatable<ComparableType>, IComparable<ComparableType>
     {
         private readonly Type Type;
+        [DataMember]
+        public string TypeName { get; set; }
 
         public ComparableType(Type type)
         {
             Type = type;
+            TypeName = Type.AssemblyQualifiedName;
         }
 
         public int CompareTo(ComparableType other)

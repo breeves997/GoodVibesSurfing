@@ -13,6 +13,7 @@ using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using CloudUtilities;
 using ValetAccessManager.Interfaces;
+using ValidationService.Interfaces;
 
 namespace GoodVibesWebService
 {
@@ -44,6 +45,10 @@ namespace GoodVibesWebService
             services.AddTransient<ISnowReportsService>(ctx =>
             {
                 return ServiceProxy.Create<ISnowReportsService>(new Uri("fabric:/GoodVibesSurfing/SnurfReportService"), new ServicePartitionKey(0));
+            });
+            services.AddTransient<ISnurfReportValidationService>(ctx =>
+            {
+                return ServiceProxy.Create<ISnurfReportValidationService>(new Uri("fabric:/GoodVibesSurfing/ValidationService"), new ServicePartitionKey(0));
             });
             services.AddTransient<ISASKeyProvider>(ctx =>
             {

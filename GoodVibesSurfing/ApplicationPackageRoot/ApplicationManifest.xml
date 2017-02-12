@@ -4,7 +4,6 @@
     <Parameter Name="ValidationService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="ValidationService_PartitionCount" DefaultValue="1" />
     <Parameter Name="ValidationService_TargetReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="ValidationService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="SnurfReportService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="SnurfReportService_PartitionCount" DefaultValue="1" />
     <Parameter Name="SnurfReportService_TargetReplicaSetSize" DefaultValue="3" />
@@ -17,10 +16,6 @@
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
-  <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="ValidationServicePkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
-  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="ValidationServicePkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
@@ -51,11 +46,6 @@
       <StatefulService ServiceTypeName="ValidationServiceType" TargetReplicaSetSize="[ValidationService_TargetReplicaSetSize]" MinReplicaSetSize="[ValidationService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[ValidationService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
       </StatefulService>
-    </Service>
-    <Service Name="ValidationService">
-      <StatelessService ServiceTypeName="ValidationServiceType" InstanceCount="[ValidationService_InstanceCount]">
-        <SingletonPartition />
-      </StatelessService>
     </Service>
     <Service Name="SnurfReportService">
       <StatefulService ServiceTypeName="SnurfReportServiceType" TargetReplicaSetSize="[SnurfReportService_TargetReplicaSetSize]" MinReplicaSetSize="[SnurfReportService_MinReplicaSetSize]">

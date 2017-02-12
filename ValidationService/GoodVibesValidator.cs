@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using SnurfReportService.Interfaces;
 using System.Linq.Expressions;
+using ValidationService.Contracts;
 
 namespace ValidationService
 {
@@ -19,41 +20,24 @@ namespace ValidationService
     //    }
     //}
 
-    public abstract class GoodVibesValidator<T> : IGoodVibesValidator
+    public abstract class GoodVibesValidator<T> : IGoodVibesValidatorFor<T>
     {
-        private List<Func<T, string>> Validators { get; set; }
-        public void AddRule(Func<T, string> rule)
+        protected GoodVibesValidator()
         {
-            this.Validators.Add(rule);
+            ValidatorExpressions = new List<Expression<Func<T, ValidationMessage>>>();
+        }
+        protected List<Expression<Func<T, ValidationMessage>>> ValidatorExpressions { get; set; }
+        protected List<Func<T, ValidationMessage>> Validators { get; set; }
+        public void AddRule(Expression<Func<T, ValidationMessage>> rule)
+        {
+            this.ValidatorExpressions.Add(rule);
         }
         public ValidationResult Validate(T item)
         {
-            List<string> errors = new List<string>();
-            int errorCount = 0;
-            foreach (var validator in Validators)
-            {
-                string message = validator(item);
-                if (!String.IsNullOrWhiteSpace(message))
-                {
-                    errorCount++;
-                    errors.Add(message);
-                }
-            }
-
-            return new ValidationResult()
-            {
-                ErrorCount = errorCount,
-                Errors = errors
-            };
-
+            List<ValidationMessage> results = new List<ValidationMessage>();
+            Validators.ForEach(x => results.Add(x(item)));
+            return new ValidationResult(results);
         }
     }
 
-    public interface IGoodVibesValidator { }
-
-    public class ValidationResult
-    {
-        public List<string> Errors { get; set; }
-        public int ErrorCount { get; set; }
-    }
 }

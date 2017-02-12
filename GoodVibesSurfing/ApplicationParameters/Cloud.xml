@@ -4,7 +4,6 @@
     <Parameter Name="ValidationService_PartitionCount" Value="1" />
     <Parameter Name="ValidationService_MinReplicaSetSize" Value="3" />
     <Parameter Name="ValidationService_TargetReplicaSetSize" Value="3" />
-    <Parameter Name="ValidationService_InstanceCount" Value="-1" />
     <Parameter Name="SnurfReportService_PartitionCount" Value="1" />
     <Parameter Name="SnurfReportService_MinReplicaSetSize" Value="3" />
     <Parameter Name="SnurfReportService_TargetReplicaSetSize" Value="3" />

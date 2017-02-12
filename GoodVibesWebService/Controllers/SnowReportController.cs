@@ -7,6 +7,9 @@ using SnurfReportService.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using System.Text;
+using ValidationService.Interfaces;
+using ValidationService.Contracts;
+using Newtonsoft.Json;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,9 +19,14 @@ namespace GoodVibesWebService.Controllers
     public class SnowReportController : Controller
     {
         private readonly ISnowReportsService UserReportsSvc;
-        public SnowReportController(ISnowReportsService svc)
+        /// <summary>
+        /// A proxy to the stateful service for validating snurf reports
+        /// </summary>
+        private readonly ISnurfReportValidationService ValidatorSvc;
+        public SnowReportController(ISnowReportsService svc, ISnurfReportValidationService validator)
         {
             UserReportsSvc = svc;
+            ValidatorSvc = validator;
         }
         [HttpGet("{id}")]
         public async Task<SnowReport> Get(long id)
@@ -40,6 +48,15 @@ namespace GoodVibesWebService.Controllers
         [HttpPost]
         public async Task<SnowReport> Post([FromBody] SnowReport report)
         {
+            ValidationResult vld = await ValidatorSvc.ValidateSnurfReport(report);
+            if (!vld.Success)
+            {
+                Response.StatusCode = 400;
+                var jsonString = JsonConvert.SerializeObject(vld);
+                Response.ContentType = new MediaTypeHeaderValue("application/json").ToString();
+                await Response.WriteAsync(jsonString, Encoding.UTF8);
+                return null;
+            }
             SnowReport rtn = await UserReportsSvc.SaveSnowReport(report);
             //this happens if the given poster has already provided a report for the day
             //TODO: handle this more elegantly

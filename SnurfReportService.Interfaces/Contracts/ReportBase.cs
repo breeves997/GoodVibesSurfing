@@ -20,7 +20,7 @@ namespace SnurfReportService.Interfaces
             Rating = rating;
             Poster = poster;
             Location = location;
-            Attachments = attachments.ToImmutableList();
+            Attachments = attachments?.ToImmutableList() ?? new List<Uri>().ToImmutableList();
             Date = date.Date;
         }
        [OnDeserialized]
@@ -50,6 +50,7 @@ namespace SnurfReportService.Interfaces
 
     public enum Ratings
     {
+        None,
         Awful,
         Poor,
         Mediocre,

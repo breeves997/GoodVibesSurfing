@@ -1702,6 +1702,12 @@
       },
       "ValetAccessManager.Interfaces/1.0.0": {
         "type": "project"
+      },
+      "ValidationService.Interfaces/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "SnurfReportService.Interfaces": "1.0.0"
+        }
       }
     }
   },
@@ -5208,6 +5214,10 @@
     "ValetAccessManager.Interfaces/1.0.0": {
       "type": "project",
       "msbuildProject": "../ValetAccessManager.Interfaces/ValetAccessManager.Interfaces.csproj"
+    },
+    "ValidationService.Interfaces/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../ValidationService.Interfaces/ValidationService.Interfaces.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5234,7 +5244,8 @@
       "CloudUtilities",
       "GetSnowConditions.Interfaces",
       "SnurfReportService.Interfaces",
-      "ValetAccessManager.Interfaces"
+      "ValetAccessManager.Interfaces",
+      "ValidationService.Interfaces"
     ]
   },
   "tools": {},
