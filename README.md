@@ -18,8 +18,12 @@ An ASP .NET Core web front end is exposed as a means to interact with and test t
  - Figure out why the blob SAS key generated from the ValetAccessManager is getting auth failures from azure
  - Create a front end framework. Preference to Angular2, but others considered
  - Create sample Actors project
+ - Standardize and improve web api responses
  
 ### DevOps
  - Create some external data stores (SQL, NoSQL) to interact with
  - Deploy live version to fabric party clusters
  - Get stateful service replicas up and running
+
+### Documentation
+ - Add instructions for setting up your dev environment
